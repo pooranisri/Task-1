@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids EduFun App</title>
+<style>
+    body { font-family: 'Arial', sans-serif; background-color: #f0f8ff; margin: 0; padding: 0; }
+    .header { background: #ff6b6b; color: white; padding: 15px; text-align: center; }
+    .nav-button { background: #4ecdc4; border: none; padding: 20px; margin: 10px; color: white; font-size: 18px; cursor: pointer; border-radius: 12px; }
+    .content-area { padding: 20px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .notification { background: #ffeaa7; border-left: 6px solid #fdcb6e; padding: 10px; margin-top: 10px; }
+    .parental-control { position: absolute; top: 10px; right: 10px; color: white; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Kids EduFun</h1>
+    <a href="#" onclick="showParentalControl()" class="parental-control">Parental Controls</a>
+</div>
+
+<div class="content-area">
+    <button class="nav-button" onclick="openTab(event, 'Rhymes')">Rhymes</button>
+    <button class="nav-button" onclick="openTab(event, 'Stories')">Stories</button>
+    <button class="nav-button" onclick="openTab(event, 'Numbers')">Numbers</button>
+    <button class="nav-button" onclick="openTab(event, 'Alphabets')">Alphabets</button>
+
+    <div id="Rhymes" class="tab-content">
+        <h2>Twinkle Twinkle Little Star</h2>
+        <!-- Placeholder for video or animation -->
+        <div>Video or animation goes here</div>
+    </div>
+
+    <div id="Stories" class="tab-content">
+        <h2>The Tortoise and the Hare</h2>
+        <p>Once upon a time...</p>
+    </div>
+
+    <div id="Numbers" class="tab-content">
+        <h2>Let's Count!</h2>
+        <p>1, 2, 3, 4, 5...</p>
+    </div>
+
+    <div id="Alphabets" class="tab-content">
+        <h2>A for Apple</h2>
+        <p>Learn your ABCs here!</p>
+    </div>
+</div>
+
+<div id="notificationArea" class="notification">
+    <p>New rhyme available: "Humpty Dumpty"! Check it out in the Rhymes section!</p>
+</div>
+
+<div id="parentalControl" style="display:none; background:#fff; padding:20px; border:1px solid #000;">
+    <h3>Parental Controls</h3>
+    <label>Password: <input type="password" id="parentalPassword"></label>
+    <button onclick="saveParentalSettings()">Save</button>
+    <p>Set daily time limit: <input type="number" id="timeLimit" min="10" max="120"> minutes</p>
+</div>
+
+<script>
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("nav-button");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+function showParentalControl() {
+    document.getElementById('parentalControl').style.display = 'block';
+}
+
+function saveParentalSettings() {
+    const password = document.getElementById('parentalPassword').value;
+    const timeLimit = document.getElementById('timeLimit').value;
+    if (password) {
+        // Here you would typically send this to a server or save locally securely
+        alert(`Settings saved. Time limit set to ${timeLimit} minutes.`);
+        document.getElementById('parentalControl').style.display = 'none';
+    } else {
+        alert('Please enter a password.');
+    }
+}
+
+// Example of a simple notification system
+function showNotification(message) {
+    const notifArea = document.getElementById('notificationArea');
+    notifArea.innerHTML = `<p>${message}</p>`;
+    setTimeout(() => notifArea.innerHTML = '', 5000); // Hide after 5 seconds
+}
+
+// Usage would be:
+// showNotification("New content added in Numbers!");
+</script>
+
+</body>
+</html>
