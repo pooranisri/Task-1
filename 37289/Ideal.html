@@ -95,7 +95,6 @@
 <div class="header">
     <h1>Kid's EduFun</h1>
     <p>Learn and Play!</p>
-    <a href="#" onclick="showParentalControl()" class="parental-control">Parental Controls</a>
 </div>
 
 <div class="container">
@@ -116,12 +115,13 @@
         <h2>Welcome to EduFun!</h2>
         <p>Please select a topic to see the content.</p>
     </div>
-
+ 
     <div id="notification"></div>
 </div>
 
 <!-- Parental Control Button -->
 <div id="parentalControl" style="display:none; background:#fff; padding:20px; border:1px solid #000;">
+    <a href="#" onclick="showParentalControl()" class="parental-control">Parental Controls</a>
     <h3>Parental Controls</h3>
     <label>Password: <input type="password" id="parentalPassword"></label>
     <button onclick="saveParentalSettings()">Save</button>
@@ -200,17 +200,29 @@
     }
 }
 
-    function notify(message) {
-        const notif = document.getElementById('notification');
-        notif.innerText = message;
-        notif.style.display = 'block';
-        setTimeout(() => { notif.style.display = 'none'; }, 5000);
-    }
+function notify(message) {
+    const notif = document.getElementById('notification');
+    notif.innerText = message;  // Set the notification message
+    notif.style.display = 'block'; // Show the notification
+    notif.style.backgroundColor = "#FFD700"; // Optional: Set a background color for the notification
+    notif.style.padding = "10px"; // Add padding for better visibility
+    notif.style.borderRadius = "5px"; // Rounded corners
+    notif.style.position = "fixed"; // Fix the position
+    notif.style.bottom = "20px"; // Position it at the bottom
+    notif.style.right = "20px"; // Position it on the right
+    notif.style.boxShadow = "0 5px 10px rgba(0, 0, 0, 0.3)"; // Add shadow for better appearance
 
-    // Initial content load
-    window.onload = () => {
-        notify('Welcome back! Check out our new story today!');
-    };
+    // Automatically hide the notification after 5 seconds
+    setTimeout(() => {
+        notif.style.display = 'none';
+    }, 5000);
+}
+
+// Example usage of the notify function
+window.onload = () => {
+    notify('Welcome back! Check out our new story today!');
+};
+
 </script>
 
 </body>
