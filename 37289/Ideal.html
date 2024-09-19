@@ -132,13 +132,6 @@
 <div id="parentalControlBtn" class="content-box">
     <button class="btn" onclick="showParentalControl()">Parental Controls</button>
 </div>
-<!-- Parental Control Button -->
-<div id="parentalControl" class="content-box">
-    <h2>Parental Controls</h2>
-    <label>Password: <input type="password" id="parentalPassword"></label>
-    <button class="btn" onclick="saveParentalSettings()">Save</button>
-    <p>Set daily time limit: <input type="number" id="timeLimit" min="10" max="120"> minutes</p>
-</div>
 
 <!-- Modal for Personalization -->
 <div id="personalizationModal" class="modal">
@@ -198,18 +191,7 @@
 
     function showParentalControl() {
     document.getElementById('parentalControl').style.display = 'block';
-}
-
-    function saveParentalSettings() {
-    const password = document.getElementById('parentalPassword').value;
-    const timeLimit = document.getElementById('timeLimit').value;
-    if (password) {
-        // Here you would typically send this to a server or save locally securely
-        alert(`Settings saved. Time limit set to ${timeLimit} minutes.`);
-        document.getElementById('parentalControl').style.display = 'none';
-    } else {
-        alert('Please enter a password.');
-    }
+    alert(`Time limit can be set to 60 minutes.`);
 }
 
 function notify(message) {
