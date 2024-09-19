@@ -30,7 +30,7 @@
             transition: background 0.3s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-        
+
         .btn:hover {
             background: #3BBBA3;
         }
@@ -64,12 +64,12 @@
             width: 100%; 
             height: 100%; 
             overflow: auto; 
-            background-color: rgb(0,0,0); 
-            background-color: rgba(0,0,0,0.4); 
+            background-color: rgb(0, 0, 0); 
+            background-color: rgba(209, 28, 28, 0.4); 
             padding-top: 60px;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: #6a3131;
             margin: 5% auto; 
             padding: 20px;
             border: 1px solid #888;
@@ -126,7 +126,7 @@
 <div id="personalizationModal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Personalize Your Avatar</h2>
+        <h2>Personalize Your Avatar now</h2>
         <label for="avatarChoice">Choose an avatar:</label>
         <select id="avatarChoice" onchange="changeAvatar()">
             <option value="default_avatar.png">Default Avatar</option>
@@ -143,16 +143,16 @@
         let content;
         switch (type) {
             case 'Rhymes':
-                content = `<h2>Twinkle Twinkle Little Star</h2><p>Twinkle, twinkle, little star, how I wonder what you are!</p>`;
+                content = `<h2>Mary had a little lamb</h2><p>Mary had a little lamb His fleece was white as snow, yeah...</p>`;
                 break;
             case 'Stories':
-                content = `<h2>The Tortoise and the Hare</h2><p>Once upon a time, a tortoise and a hare had a race...</p>`;
+                content = `<h2>The lion and the mouse</h2><p>Once upon a time, a lion was sleeping in a forest...</p>`;
                 break;
             case 'Numbers':
-                content = `<h2>Let's Count!</h2><p>1, 2, 3, 4, 5!</p>`;
+                content = `<h2>Count starts!!!</h2><p>1, 2, 3, 4, 5!</p>`;
                 break;
             case 'Alphabets':
-                content = `<h2>A for Apple</h2><p>Learn your ABCs!</p>`;
+                content = `<h2>A for Alligator</h2><p>Learn your ABCs!</p>`;
                 break;
             default:
                 content = `<h2>Welcome!</h2><p>Please select a topic.</p>`;
