@@ -115,13 +115,12 @@
         <h2>Welcome to EduFun!</h2>
         <p>Please select a topic to see the content.</p>
     </div>
- 
     <div id="notification"></div>
 </div>
 
 <!-- Parental Control Button -->
-<div id="parentalControl" style="display:none; background:#fff; padding:20px; border:1px solid #000;">
-    <a href="#" onclick="showParentalControl()" class="parental-control">Parental Controls</a>
+<div id="parentalControl" style="display:inline; background:#fff; padding:20px; border:1px solid #000;">
+    <button class="btn" onclick="showParentalControl()">Parental Controls</button>
     <h3>Parental Controls</h3>
     <label>Password: <input type="password" id="parentalPassword"></label>
     <button onclick="saveParentalSettings()">Save</button>
