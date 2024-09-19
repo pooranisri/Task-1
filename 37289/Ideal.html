@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kid's EduFun</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #FFFAF0;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        .header {
+            background: #FF6F61;
+            padding: 20px;
+            color: white;
+        }
+        .btn {
+            background: #4ECFC4;
+            border: none;
+            padding: 15px 25px;
+            color: white;
+            font-size: 1.2rem;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn:hover {
+            background: #3BBBA3;
+        }
+        .content-box {
+            background: #98FB98;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+        #notification {
+            background: #FFD700;
+            padding: 10px;
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Kid's EduFun</h1>
+    <p>Learn and Play!</p>
+</div>
+
+<div class="container">
+    <div id="userProfile">
+        <img src="default_avatar.png" id="avatar" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+        <button class="btn" onclick="showPersonalization()">Personalize</button>
+    </div>
+
+    <div id="mainContent" class="content-box">
+        <h2>Welcome to EduFun!</h2>
+        <p>Select a topic to get started:</p>
+        <button class="btn" onclick="loadContent('Rhymes')">Rhymes</button>
+        <button class="btn" onclick="loadContent('Stories')">Stories</button>
+        <button class="btn" onclick="loadContent('Numbers')">Numbers</button>
+        <button class="btn" onclick="loadContent('Alphabets')">Alphabets</button>
+    </div>
+
+    <div id="notification"></div>
+</div>
+
+<!-- Parental Control Button -->
+<div class="fixed-bottom mb-3 mx-3">
+    <button class="btn" onclick="parentalControl()">Parental Controls</button>
+</div>
+
+<script>
+    function loadContent(type) {
+        let content;
+        switch (type) {
+            case 'Rhymes':
+                content = `<h2>Twinkle Twinkle Little Star</h2><p>Twinkle, twinkle, little star, how I wonder what you are!</p>`;
+                break;
+            case 'Stories':
+                content = `<h2>The Tortoise and the Hare</h2><p>Once upon a time, a tortoise and a hare had a race...</p>`;
+                break;
+            case 'Numbers':
+                content = `<h2>Let's Count!</h2><p>1, 2, 3, 4, 5!</p>`;
+                break;
+            case 'Alphabets':
+                content = `<h2>A for Apple</h2><p>Learn your ABCs!</p>`;
+                break;
+            default:
+                content = `<h2>Welcome!</h2><p>Please select a topic.</p>`;
+        }
+        document.getElementById('mainContent').innerHTML = content;
+    }
+
+    function showPersonalization() {
+        alert('Personalize your avatar and theme!');
+        // Logic to open a personalization modal can be added here
+    }
+
+    function parentalControl() {
+        alert('Set time limits and content restrictions here.');
+        // Logic for parental control settings can be added here
+    }
+
+    function notify(message) {
+        const notif = document.getElementById('notification');
+        notif.innerText = message;
+        notif.style.display = 'block';
+        setTimeout(() => { notif.style.display = 'none'; }, 5000);
+    }
+
+    // Initial content load
+    window.onload = () => {
+        loadContent('Welcome to EduFun!');
+        notify('Welcome back! Check out our new story today!');
+    };
+</script>
+
+</body>
+</html>
