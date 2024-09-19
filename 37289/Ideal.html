@@ -95,6 +95,7 @@
 <div class="header">
     <h1>Kid's EduFun</h1>
     <p>Learn and Play!</p>
+    <a href="#" onclick="showParentalControl()" class="parental-control">Parental Controls</a>
 </div>
 
 <div class="container">
@@ -182,6 +183,10 @@
         const themeColor = document.getElementById('themeColor').value;
         document.body.style.backgroundColor = themeColor;
     }
+
+    function showParentalControl() {
+    document.getElementById('parentalControl').style.display = 'block';
+}
 
     function saveParentalSettings() {
     const password = document.getElementById('parentalPassword').value;
