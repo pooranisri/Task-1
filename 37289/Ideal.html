@@ -30,6 +30,18 @@
             transition: background 0.3s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
+        .button {
+            background: #4ECFC4;
+            border: none;
+            padding: 5px 10px;
+            color: white;
+            font-size: 0.5rem;
+            margin: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
         .btn:hover {
             background: #3BBBA3;
         }
@@ -122,9 +134,9 @@
 </div>
 <!-- Parental Control Button -->
 <div id="parentalControl" class="content-box">
-    <h3>Parental Controls</h3>
+    <h2>Parental Controls</h2>
     <label>Password: <input type="password" id="parentalPassword"></label>
-    <button onclick="saveParentalSettings()">Save</button>
+    <button class="btn" onclick="saveParentalSettings()">Save</button>
     <p>Set daily time limit: <input type="number" id="timeLimit" min="10" max="120"> minutes</p>
 </div>
 
@@ -201,20 +213,20 @@
 }
 
 function notify(message) {
-    const notif = document.getElementById('notification');
-    notif.innerText = message;  // Set the notification message
-    notif.style.display = 'block'; // Show the notification
-    notif.style.backgroundColor = "#FFD700"; // Optional: Set a background color for the notification
-    notif.style.padding = "10px"; // Add padding for better visibility
-    notif.style.borderRadius = "5px"; // Rounded corners
-    notif.style.position = "fixed"; // Fix the position
-    notif.style.bottom = "20px"; // Position it at the bottom
-    notif.style.right = "20px"; // Position it on the right
-    notif.style.boxShadow = "0 5px 10px rgba(0, 0, 0, 0.3)"; // Add shadow for better appearance
+    const notific = document.getElementById('notification');
+    notific.innerText = message;  // Set the notification message
+    notific.style.display = 'block'; // Show the notification
+    notific.style.backgroundColor = "#FFD700"; // Optional: Set a background color for the notification
+    notific.style.padding = "10px"; // Add padding for better visibility
+    notific.style.borderRadius = "5px"; // Rounded corners
+    notific.style.position = "fixed"; // Fix the position
+    notific.style.bottom = "20px"; // Position it at the bottom
+    notific.style.right = "20px"; // Position it on the right
+    notific.style.boxShadow = "0 5px 10px rgba(0, 0, 0, 0.3)"; // Add shadow for better appearance
 
     // Automatically hide the notification after 5 seconds
     setTimeout(() => {
-        notif.style.display = 'none';
+        notific.style.display = 'none';
     }, 5000);
 }
 
