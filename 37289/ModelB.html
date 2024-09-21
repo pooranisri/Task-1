@@ -2,20 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Learn with Fun</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Learning App</title>
 <style>
-    body { font-family: 'Arial', sans-serif; background: #FFF8DC; margin: 0; padding: 20px; }
-    .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; }
-    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-    .tab button:hover { background-color: #ddd; }
-    .tab button.active { background-color: #ccc; }
-    .tabcontent { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; }
-    .category, .alphabet-item { cursor: pointer; padding: 10px; margin: 10px; background: #FF69B4; color: white; text-align: center; border-radius: 5px; }
-    #gameArea { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-    .card { width: 50px; height: 50px; background: #FFA07A; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; }
-    .star { font-size: 24px; }
-    .green { color: green; }
-    .red { color: red; }
+    body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #FFF3E0; margin: 0; padding: 20px; }
+    .tab { overflow: hidden; border-bottom: 1px solid #ccc; background-color: #FFB74D; }
+    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; }
+    .tab button:hover { background-color: #FFD580; }
+    .tab button.active { background-color: #FFA000; }
+    .tabcontent { display: none; padding: 6px 12px; border-top: none; }
+    .category-btn { margin: 5px; padding: 10px; font-size: 16px; background-color: #9CCC65; border: none; border-radius: 5px; cursor: pointer; color: white; }
+    .flashcard { background: #A5D6A7; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center; }
+    .flashcard img { max-width: 100%; height: auto; border-radius: 8px; }
+    #gameArea { background: #80DEEA; padding: 20px; border-radius: 10px; margin-top: 20px; }
+    .letter { background: white; border: 2px solid #0097A7; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; text-align: center; margin: 5px; display: inline-block; cursor: pointer; }
+    .star { font-size: 30px; }
+    .green-star { color: #4CAF50; }
+    .red-star { color: #F44336; }
 </style>
 </head>
 <body>
@@ -26,26 +29,18 @@
 </div>
 
 <div id="Flashcards" class="tabcontent">
-  <h3>Choose a Category</h3>
-  <div id="categories" class="category-list"></div>
+  <button class="category-btn" onclick="loadCategory('Fruits')">Fruits</button>
+  <button class="category-btn" onclick="loadCategory('Vegetables')">Vegetables</button>
+  <button class="category-btn" onclick="loadCategory('Colors')">Colors</button>
+  <button class="category-btn" onclick="loadCategory('Vehicles')">Vehicles</button>
+  <div class="flashcard" id="flashcardDisplay"></div>
 </div>
 
 <div id="Games" class="tabcontent">
-  <h3>Matching Game</h3>
   <div id="gameArea"></div>
-  <div id="result"></div>
 </div>
 
 <script>
-// Data API - For this example, we'll simulate an API with static data
-const dataAPI = {
-    'Fruits': ['Apple', 'Banana', 'Cherry'],
-    'Vegetables': ['Carrot', 'Broccoli', 'Eggplant'],
-    'Colors': ['Red', 'Blue', 'Green'],
-    'Vehicles': ['Car', 'Bus', 'Train']
-};
-
-// Function to open tab
 function openTab(evt, tabName) {
     var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
@@ -60,67 +55,77 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-// Flashcards functionality
-function setupFlashcards() {
-    const categoriesDiv = document.getElementById('categories');
-    Object.keys(dataAPI).forEach(category => {
-        let div = document.createElement('div');
-        div.className = 'category';
-        div.textContent = category;
-        div.onclick = function() { showAlphabet(category); };
-        categoriesDiv.appendChild(div);
-    });
+const categories = {
+    'Fruits': ['Apple', 'Banana', 'Orange'],
+    'Vegetables': ['Carrot', 'Broccoli', 'Tomato'],
+    'Colors': ['Red', 'Blue', 'Green'],
+    'Vehicles': ['Car', 'Bus', 'Bicycle']
+};
+
+function loadCategory(category) {
+    const display = document.getElementById('flashcardDisplay');
+    const item = categories[category][Math.floor(Math.random() * categories[category].length)];
+    // Placeholder for image and audio - in real-world use, replace with actual API calls
+    display.innerHTML = `<img src="placeholder.jpg" alt="${item}"><br><button onclick="playSound('${item}')">Pronounce</button>`;
 }
 
-function showAlphabet(category) {
-    // Here you would fetch data for each alphabet related to the category
-    alert('Show ' + category + ' for each alphabet. Implement further with sound.');
-    // Implementation for audio would go here using Audio() constructor
+function playSound(word) {
+    let audio = new Audio();
+    // This would typically fetch an audio file or use text-to-speech API
+    audio.src = `sound/${word.toLowerCase()}.mp3`; // Placeholder
+    audio.play();
 }
 
-// Game functionality
+// Game setup
 function setupGame() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const gameArea = document.getElementById('gameArea');
-    const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    const gamePairs = [...alphabets, ...alphabets.map(char => char.toLowerCase())].sort(() => Math.random() - 0.5);
+    let currentMatch = {lower: null, upper: null};
+    
+    for (let i = 0; i < letters.length; i++) {
+        const lower = document.createElement('div');
+        lower.className = 'letter';
+        lower.textContent = letters[i].toLowerCase();
+        lower.onclick = () => selectLetter(lower, 'lower');
+        
+        const upper = document.createElement('div');
+        upper.className = 'letter';
+        upper.textContent = letters[i];
+        upper.onclick = () => selectLetter(upper, 'upper');
 
-    gamePairs.forEach(char => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.textContent = char;
-        card.onclick = function() { checkMatch(this, char); };
-        gameArea.appendChild(card);
-    });
-}
+        gameArea.appendChild(lower);
+        gameArea.appendChild(upper);
+    }
 
-let firstCard = null, secondCard = null;
-
-function checkMatch(card, char) {
-    if (!firstCard) {
-        firstCard = {element: card, char: char};
-        card.textContent = char;
-    } else if (!secondCard && card !== firstCard.element) {
-        secondCard = {element: card, char: char};
-        card.textContent = char;
-        setTimeout(() => {
-            if (firstCard.char.toLowerCase() === secondCard.char.toLowerCase()) {
-                document.getElementById('result').innerHTML += '<span class="star green">★</span>';
-            } else {
-                document.getElementById('result').innerHTML += '<span class="star red">★</span>';
+    function selectLetter(letter, type) {
+        if (currentMatch[type] === null) {
+            currentMatch[type] = letter;
+            letter.style.backgroundColor = '#FFEB3B';
+            if (currentMatch.lower && currentMatch.upper) {
+                checkMatch();
             }
-            firstCard.element.textContent = '';
-            secondCard.element.textContent = '';
-            firstCard = secondCard = null;
-        }, 1000);
+        }
+    }
+
+    function checkMatch() {
+        const lower = currentMatch.lower.textContent;
+        const upper = currentMatch.upper.textContent;
+        const result = document.createElement('span');
+        result.className = 'star';
+        result.textContent = lower === upper.toLowerCase() ? '★' : '✩';
+        result.className += lower === upper.toLowerCase() ? ' green-star' : ' red-star';
+        gameArea.appendChild(result);
+        resetSelection();
+    }
+
+    function resetSelection() {
+        currentMatch.lower.style.backgroundColor = '';
+        currentMatch.upper.style.backgroundColor = '';
+        currentMatch = {lower: null, upper: null};
     }
 }
 
-// Initialize the application
-document.addEventListener('DOMContentLoaded', (event) => {
-    setupFlashcards();
-    setupGame();
-});
-
+document.getElementById('Games').addEventListener('click', setupGame);
 </script>
 
 </body>

@@ -2,142 +2,126 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kids Learning App</title>
+<title>Learn with Fun</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 <style>
-    body { font-family: 'Arial', sans-serif; background: #f0f8ff; margin: 0; padding: 0; }
-    .tab { overflow: hidden; border-bottom: 1px solid #ccc; background-color: #ffeb3b; }
-    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-    .tab button:hover { background-color: #ffea00; }
-    .tab button.active { background-color: #ffc107; }
-    .tabcontent { display: none; padding: 6px 12px; border-top: none; }
-    .category { display: flex; justify-content: space-around; margin-top: 20px; }
-    .category div { text-align: center; cursor: pointer; background: #87ceeb; padding: 20px; border-radius: 10px; width: 150px; }
-    .category img { width: 100px; height: 100px; }
-    .alphabet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
-    .alphabet-item { background: #ffa07a; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; }
-    .game-area { display: flex; flex-direction: column; align-items: center; }
-    .match-item { margin: 10px; padding: 10px; background: #98fb98; cursor: move; }
-    .drop-zone { border: 2px dashed #ccc; padding: 20px; width: 50px; text-align: center; margin: 10px; }
+    body { background-color: #33FFBD; font-family: 'Arial', sans-serif; }
+    .nav-tabs { border-bottom: 2px solid #FF5733; }
+    .nav-link { color: #FF5733; }
+    .nav-link.active { background-color: #FF5733 !important; color: white !important; }
+    .card { margin: 10px; cursor: pointer; transition: transform 0.2s; }
+    .card:hover { transform: scale(1.05); }
+    #gameArea { display: none; }
+    .star { font-size: 24px; }
+    .green-star { color: green; }
+    .red-star { color: red; }
 </style>
 </head>
 <body>
 
-<div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Flashcards')">Flashcards</button>
-  <button class="tablinks" onclick="openTab(event, 'Games')">Games</button>
-</div>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="flashcards-tab" data-bs-toggle="tab" data-bs-target="#flashcards" type="button" role="tab" aria-controls="flashcards" aria-selected="true">Flashcards</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="games-tab" data-bs-toggle="tab" data-bs-target="#games" type="button" role="tab" aria-controls="games" aria-selected="false">Games</button>
+  </li>
+</ul>
 
-<div id="Flashcards" class="tabcontent">
-    <div class="category">
-        <div onclick="loadCategory('fruits')">
-            <img src="data:image/png;base64,...(base64 encoded fruit icon)" alt="Fruits">
-            <p>Fruits</p>
-        </div>
-        <!-- Similar divs for Vegetables, Colors, Vehicles -->
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="flashcards" role="tabpanel" aria-labelledby="flashcards-tab">
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="fruits-tab" data-bs-toggle="pill" data-bs-target="#fruits" type="button" role="tab" aria-controls="fruits" aria-selected="true">Fruits</button>
+      </li>
+      <!-- Add similar buttons for Vegetables, Colors, Vehicles -->
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active" id="fruits" role="tabpanel" aria-labelledby="fruits-tab">
+        <div id="fruitsContent" class="d-flex flex-wrap justify-content-center"></div>
+      </div>
+      <!-- Content panes for other categories -->
     </div>
-    <div id="alphabetGrid" class="alphabet-grid"></div>
+  </div>
+  
+  <div class="tab-pane fade" id="games" role="tabpanel" aria-labelledby="games-tab">
+    <div id="gameArea" class="text-center"></div>
+  </div>
 </div>
 
-<div id="Games" class="tabcontent">
-    <h3>Matching Game</h3>
-    <div class="game-area">
-        <div id="matchItems" class="match-items"></div>
-        <div id="dropZones" class="drop-zones"></div>
-    </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
+    const categories = ['fruits', 'vegetables', 'colors', 'vehicles'];
+    const flashcardsData = {}; // This will be populated from an API
 
-// Placeholder for API data
-let categories = {
-    fruits: 'A,B,C...'.split(','),
-    // Similarly add for vegetables, colors, vehicles
-};
-
-function loadCategory(category) {
-    let grid = document.getElementById('alphabetGrid');
-    grid.innerHTML = '';
-    categories[category].forEach(letter => {
-        let item = document.createElement('div');
-        item.className = 'alphabet-item';
-        item.textContent = letter;
-        item.onclick = function() { playSound(letter, category); };
-        grid.appendChild(item);
-    });
-}
-
-function playSound(letter, category) {
-    // Assuming API provides sound URLs
-    fetch(`/api/sound/${category}/${letter}`)
-    .then(response => response.json())
-    .then(data => {
-        let audio = new Audio(data.soundUrl);
-        audio.play();
-    });
-}
-
-// Game functionality
-document.addEventListener('DOMContentLoaded', function() {
-    const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    const matchItems = document.getElementById('matchItems');
-    const dropZones = document.getElementById('dropZones');
-
-    letters.forEach(letter => {
-        let item = document.createElement('div');
-        item.className = 'match-item';
-        item.textContent = letter;
-        item.draggable = true;
-        matchItems.appendChild(item);
-
-        let dropZone = document.createElement('div');
-        dropZone.className = 'drop-zone';
-        dropZone.textContent = letter.toUpperCase();
-        dropZone.dataset.match = letter;
-        dropZones.appendChild(dropZone);
-    });
-
-    document.querySelectorAll('.match-item').forEach(item => {
-        item.addEventListener('dragstart', dragStart);
-    });
-
-    document.querySelectorAll('.drop-zone').forEach(zone => {
-        zone.addEventListener('dragover', dragOver);
-        zone.addEventListener('drop', drop);
-    });
-
-    function dragStart(e) {
-        e.dataTransfer.setData('text/plain', e.target.textContent);
+    // Mock API call - replace with actual API
+    function fetchData(category) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve({
+                    'apple': { image: 'apple.jpg', audio: 'apple.mp3' },
+                    'banana': { image: 'banana.jpg', audio: 'banana.mp3' }
+                    // ... more items
+                });
+            }, 500);
+        });
     }
 
-    function dragOver(e) {
-        e.preventDefault();
+    categories.forEach(category => {
+        document.getElementById(`${category}-tab`).addEventListener('click', async () => {
+            if (!flashcardsData[category]) {
+                flashcardsData[category] = await fetchData(category);
+            }
+            displayFlashcards(category, flashcardsData[category]);
+        });
+    });
+
+    function displayFlashcards(category, data) {
+        const contentDiv = document.getElementById(`${category}Content`);
+        contentDiv.innerHTML = '';
+        Object.keys(data).forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card' + ' text-center';
+            card.innerHTML = `<img src="${data[item].image}" class="card-img-top" alt="${item}" style="width: 100px; height: 100px; object-fit: cover;">
+                              <div class="card-body">
+                                <p class="card-text">${item}</p>
+                              </div>`;
+            card.onclick = () => new Audio(data[item].audio).play();
+            contentDiv.appendChild(card);
+        });
     }
 
-    function drop(e) {
-        e.preventDefault();
-        const data = e.dataTransfer.getData('text');
-        const dropZone = e.target;
-        if (dropZone.textContent.toLowerCase() === data) {
-            dropZone.innerHTML += '<span style="color:green;">★</span>';
-        } else {
-            dropZone.innerHTML += '<span style="color:red;">★</span>';
-        }
+    // Game Logic
+    function setupGame() {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        const gameArea = document.getElementById('gameArea');
+        gameArea.innerHTML = ''; // Clear previous game
+        letters.forEach(letter => {
+            const upper = document.createElement('span');
+            upper.textContent = letter;
+            upper.draggable = true;
+            upper.className = 'm-2 p-2 border';
+            const lower = document.createElement('span');
+            lower.textContent = letter.toLowerCase();
+            lower.className = 'm-2 p-2 border dropzone';
+            
+            gameArea.appendChild(upper);
+            gameArea.appendChild(lower);
+        });
+
+        // Basic drag and drop functionality - this needs refinement for actual use
+        gameArea.addEventListener('dragover', e => e.preventDefault());
+        gameArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData("text");
+            if (e.target.className.includes('dropzone')) {
+                const result = (data.toLowerCase() === e.target.textContent) ? 'green-star' : 'red-star';
+                e.target.innerHTML += `<span class="star ${result}">*</span>`;
+            }
+        });
     }
-});
+
+    document.getElementById('games-tab').addEventListener('click', setupGame);
 </script>
 
 </body>
