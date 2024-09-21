@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learning App for Kids</title>
-    <style>
-        body { font-family: 'Arial', sans-serif; background-color: #f0f8ff; margin: 0; padding: 0; }
-        .tab { overflow: hidden; background-color: #ffeb3b; }
-        .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-        .tab button:hover { background-color: #ffdd00; }
-        .tab button.active { background-color: #fbc02d; }
-        .tabcontent { display: none; padding: 6px 12px; border-top: none; animation: fadeEffect 1s; }
-        @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
-        .card { background: #ffffff; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: 10px; padding: 20px; text-align: center; }
-        .card:hover { transform: scale(1.05); transition: transform .2s; }
-        .colorful { color: #ff5722; }
-        #matchingGame { display: flex; flex-wrap: wrap; justify-content: center; }
-        .letterBox { width: 50px; height: 50px; margin: 10px; line-height: 50px; text-align: center; border: 2px solid #009688; cursor: pointer; }
-        .star { font-size: 24px; }
-        .green { color: green; }
-        .red { color: red; }
-    </style>
+<meta charset="UTF-8">
+<title>Learn with Fun</title>
+<style>
+    body { font-family: 'Arial', sans-serif; background: #FFF8DC; margin: 0; padding: 20px; }
+    .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; }
+    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
+    .tab button:hover { background-color: #ddd; }
+    .tab button.active { background-color: #ccc; }
+    .tabcontent { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; }
+    .category, .alphabet-item { cursor: pointer; padding: 10px; margin: 10px; background: #FF69B4; color: white; text-align: center; border-radius: 5px; }
+    #gameArea { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+    .card { width: 50px; height: 50px; background: #FFA07A; display: flex; justify-content: center; align-items: center; font-size: 20px; cursor: pointer; }
+    .star { font-size: 24px; }
+    .green { color: green; }
+    .red { color: red; }
+</style>
 </head>
 <body>
 
@@ -30,50 +26,28 @@
 </div>
 
 <div id="Flashcards" class="tabcontent">
-  <div id="categories" style="display: flex; justify-content: space-around; margin-bottom: 20px;">
-    <button onclick="showItems('Fruits')">Fruits</button>
-    <button onclick="showItems('Vegetables')">Vegetables</button>
-    <button onclick="showItems('Colors')">Colors</button>
-    <button onclick="showItems('Vehicles')">Vehicles</button>
-  </div>
-  <div id="flashcardDisplay"></div>
+  <h3>Choose a Category</h3>
+  <div id="categories" class="category-list"></div>
 </div>
 
 <div id="Games" class="tabcontent">
   <h3>Matching Game</h3>
-  <div id="matchingGame"></div>
+  <div id="gameArea"></div>
   <div id="result"></div>
 </div>
 
 <script>
-// Flashcards Data
-const items = {
-    'Fruits': ['apple', 'banana', 'orange'],
-    'Vegetables': ['carrot', 'broccoli', 'spinach'],
-    'Colors': ['red', 'blue', 'yellow'],
-    'Vehicles': ['car', 'bicycle', 'train']
+// Data API - For this example, we'll simulate an API with static data
+const dataAPI = {
+    'Fruits': ['Apple', 'Banana', 'Cherry'],
+    'Vegetables': ['Carrot', 'Broccoli', 'Eggplant'],
+    'Colors': ['Red', 'Blue', 'Green'],
+    'Vehicles': ['Car', 'Bus', 'Train']
 };
 
-function showItems(category) {
-    const display = document.getElementById('flashcardDisplay');
-    display.innerHTML = '';
-    items[category].forEach(item => {
-        let card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `<h3>${item}</h3><button onclick="playSound('${item}')">Listen</button>`;
-        card.style.background = `#${Math.floor(Math.random()*16777215).toString(16)}`;
-        display.appendChild(card);
-    });
-}
-
-function playSound(word) {
-    const audio = new Audio(`https://api.dictionaryapi.dev/media/pronunciations/en/${word}-us.mp3`);
-    audio.play().catch(e => console.error('Audio playback failed:', e));
-}
-
-// Game Logic
+// Function to open tab
 function openTab(evt, tabName) {
-    let i, tabcontent, tablinks;
+    var i, tabcontent, tablinks;
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
         tabcontent[i].style.display = "none";
@@ -86,39 +60,67 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-function setupGame() {
-    const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
-    const gameArea = document.getElementById('matchingGame');
-    const result = document.getElementById('result');
-    let selected = [];
-
-    letters.forEach(letter => {
-        let box = document.createElement('div');
-        box.className = 'letterBox';
-        box.textContent = letter;
-        box.setAttribute('data-letter', letter.toUpperCase());
-        box.onclick = function() { selectLetter(this); };
-        gameArea.appendChild(box);
+// Flashcards functionality
+function setupFlashcards() {
+    const categoriesDiv = document.getElementById('categories');
+    Object.keys(dataAPI).forEach(category => {
+        let div = document.createElement('div');
+        div.className = 'category';
+        div.textContent = category;
+        div.onclick = function() { showAlphabet(category); };
+        categoriesDiv.appendChild(div);
     });
+}
 
-    function selectLetter(box) {
-        selected.push(box);
-        if (selected.length === 2) {
-            if (selected[0].textContent.toLowerCase() === selected[1].getAttribute('data-letter').toLowerCase()) {
-                result.innerHTML += `<span class="star green">★</span>`;
+function showAlphabet(category) {
+    // Here you would fetch data for each alphabet related to the category
+    alert('Show ' + category + ' for each alphabet. Implement further with sound.');
+    // Implementation for audio would go here using Audio() constructor
+}
+
+// Game functionality
+function setupGame() {
+    const gameArea = document.getElementById('gameArea');
+    const alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    const gamePairs = [...alphabets, ...alphabets.map(char => char.toLowerCase())].sort(() => Math.random() - 0.5);
+
+    gamePairs.forEach(char => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.textContent = char;
+        card.onclick = function() { checkMatch(this, char); };
+        gameArea.appendChild(card);
+    });
+}
+
+let firstCard = null, secondCard = null;
+
+function checkMatch(card, char) {
+    if (!firstCard) {
+        firstCard = {element: card, char: char};
+        card.textContent = char;
+    } else if (!secondCard && card !== firstCard.element) {
+        secondCard = {element: card, char: char};
+        card.textContent = char;
+        setTimeout(() => {
+            if (firstCard.char.toLowerCase() === secondCard.char.toLowerCase()) {
+                document.getElementById('result').innerHTML += '<span class="star green">★</span>';
             } else {
-                result.innerHTML += `<span class="star red">★</span>`;
+                document.getElementById('result').innerHTML += '<span class="star red">★</span>';
             }
-            selected = [];
-        }
+            firstCard.element.textContent = '';
+            secondCard.element.textContent = '';
+            firstCard = secondCard = null;
+        }, 1000);
     }
 }
 
-// Initialize the game when the Games tab is clicked
-document.querySelector('.tablinks[onclick="openTab(event, \'Games\')"]').addEventListener('click', setupGame);
+// Initialize the application
+document.addEventListener('DOMContentLoaded', (event) => {
+    setupFlashcards();
+    setupGame();
+});
 
-// Open Flashcards by default
-document.getElementsByClassName('tablinks')[0].click();
 </script>
 
 </body>

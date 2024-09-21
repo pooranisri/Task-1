@@ -6,20 +6,19 @@
 <title>Kids Learning App</title>
 <style>
     body { font-family: 'Arial', sans-serif; background: #f0f8ff; margin: 0; padding: 0; }
-    .tab { overflow: hidden; border: 1px solid #ccc; background-color: #f1f1f1; }
+    .tab { overflow: hidden; border-bottom: 1px solid #ccc; background-color: #ffeb3b; }
     .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; }
-    .tab button:hover { background-color: #ddd; }
-    .tab button.active { background-color: #ccc; }
-    .tabcontent { display: none; padding: 6px 12px; border: 1px solid #ccc; border-top: none; animation: fadeEffect 1s; }
-    @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
-    .category { display: flex; justify-content: space-around; flex-wrap: wrap; }
-    .flashcard { margin: 10px; padding: 20px; width: 150px; height: 150px; text-align: center; background: #ffeb3b; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-    .flashcard:hover { transform: scale(1.05); }
-    .game-board { display: grid; grid-template-columns: repeat(4, 50px); gap: 10px; margin: 20px auto; width: fit-content; }
-    .game-card { width: 50px; height: 50px; background: #4CAF50; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 24px; color: white; }
-    .star { font-size: 30px; text-align: center; }
-    .green-star { color: green; }
-    .red-star { color: red; }
+    .tab button:hover { background-color: #ffea00; }
+    .tab button.active { background-color: #ffc107; }
+    .tabcontent { display: none; padding: 6px 12px; border-top: none; }
+    .category { display: flex; justify-content: space-around; margin-top: 20px; }
+    .category div { text-align: center; cursor: pointer; background: #87ceeb; padding: 20px; border-radius: 10px; width: 150px; }
+    .category img { width: 100px; height: 100px; }
+    .alphabet-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 20px; }
+    .alphabet-item { background: #ffa07a; text-align: center; padding: 10px; border-radius: 5px; cursor: pointer; }
+    .game-area { display: flex; flex-direction: column; align-items: center; }
+    .match-item { margin: 10px; padding: 10px; background: #98fb98; cursor: move; }
+    .drop-zone { border: 2px dashed #ccc; padding: 20px; width: 50px; text-align: center; margin: 10px; }
 </style>
 </head>
 <body>
@@ -30,13 +29,22 @@
 </div>
 
 <div id="Flashcards" class="tabcontent">
-  <div class="category" id="flashcardCategory"></div>
+    <div class="category">
+        <div onclick="loadCategory('fruits')">
+            <img src="data:image/png;base64,...(base64 encoded fruit icon)" alt="Fruits">
+            <p>Fruits</p>
+        </div>
+        <!-- Similar divs for Vegetables, Colors, Vehicles -->
+    </div>
+    <div id="alphabetGrid" class="alphabet-grid"></div>
 </div>
 
 <div id="Games" class="tabcontent">
-  <h3>Matching Game</h3>
-  <div id="gameBoard" class="game-board"></div>
-  <div id="result" class="star"></div>
+    <h3>Matching Game</h3>
+    <div class="game-area">
+        <div id="matchItems" class="match-items"></div>
+        <div id="dropZones" class="drop-zones"></div>
+    </div>
 </div>
 
 <script>
@@ -54,86 +62,81 @@ function openTab(evt, tabName) {
     evt.currentTarget.className += " active";
 }
 
-// Flashcards Data
-const flashcardsData = {
-    Fruits: ['🍎 Apple', '🍌 Banana', '🍊 Orange'],
-    Vegetables: ['🥕 Carrot', '🥦 Broccoli', '🍅 Tomato'],
-    Colors: ['🔴 Red', '🔵 Blue', '🟡 Yellow'],
-    Vehicles: ['🚗 Car', '🚲 Bike', '✈️ Plane']
+// Placeholder for API data
+let categories = {
+    fruits: 'A,B,C...'.split(','),
+    // Similarly add for vegetables, colors, vehicles
 };
 
-function createFlashcards() {
-    const categoryDiv = document.getElementById('flashcardCategory');
-    for (const [category, items] of Object.entries(flashcardsData)) {
-        items.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'flashcard';
-            card.innerHTML = item.split(' ')[1];
-            card.style.backgroundColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-            card.onclick = function() {
-                const audio = new Audio(`https://api.voicerss.org/?key=YOUR_API_KEY&hl=en-us&src=${item.split(' ')[1]}`);
-                audio.play();
-            };
-            categoryDiv.appendChild(card);
-        });
-    }
-}
-
-// Game Logic
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-let cards = [...alphabet, ...alphabet];
-let firstCard = null, secondCard = null;
-
-function shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
-function setupGame() {
-    shuffle(cards);
-    const gameBoard = document.getElementById('gameBoard');
-    gameBoard.innerHTML = '';
-    cards.forEach((char, index) => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.textContent = '?';
-        card.dataset.index = index;
-        card.onclick = flipCard;
-        gameBoard.appendChild(card);
+function loadCategory(category) {
+    let grid = document.getElementById('alphabetGrid');
+    grid.innerHTML = '';
+    categories[category].forEach(letter => {
+        let item = document.createElement('div');
+        item.className = 'alphabet-item';
+        item.textContent = letter;
+        item.onclick = function() { playSound(letter, category); };
+        grid.appendChild(item);
     });
 }
 
-function flipCard() {
-    if (firstCard && secondCard) return;
-    this.textContent = cards[this.dataset.index];
-    if (!firstCard) {
-        firstCard = this;
-    } else if (!secondCard) {
-        secondCard = this;
-        setTimeout(checkMatch, 1000);
-    }
+function playSound(letter, category) {
+    // Assuming API provides sound URLs
+    fetch(`/api/sound/${category}/${letter}`)
+    .then(response => response.json())
+    .then(data => {
+        let audio = new Audio(data.soundUrl);
+        audio.play();
+    });
 }
 
-function checkMatch() {
-    const resultDiv = document.getElementById('result');
-    if (cards[firstCard.dataset.index].toLowerCase() === cards[secondCard.dataset.index].toLowerCase()) {
-        resultDiv.className = 'star green-star';
-        resultDiv.textContent = '★';
-    } else {
-        resultDiv.className = 'star red-star';
-        resultDiv.textContent = '★';
-        firstCard.textContent = '?';
-        secondCard.textContent = '?';
-    }
-    firstCard = secondCard = null;
-}
-
+// Game functionality
 document.addEventListener('DOMContentLoaded', function() {
-    createFlashcards();
-    setupGame();
-    openTab({currentTarget: document.querySelector('.tablinks')}, 'Flashcards');
+    const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const matchItems = document.getElementById('matchItems');
+    const dropZones = document.getElementById('dropZones');
+
+    letters.forEach(letter => {
+        let item = document.createElement('div');
+        item.className = 'match-item';
+        item.textContent = letter;
+        item.draggable = true;
+        matchItems.appendChild(item);
+
+        let dropZone = document.createElement('div');
+        dropZone.className = 'drop-zone';
+        dropZone.textContent = letter.toUpperCase();
+        dropZone.dataset.match = letter;
+        dropZones.appendChild(dropZone);
+    });
+
+    document.querySelectorAll('.match-item').forEach(item => {
+        item.addEventListener('dragstart', dragStart);
+    });
+
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('drop', drop);
+    });
+
+    function dragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.textContent);
+    }
+
+    function dragOver(e) {
+        e.preventDefault();
+    }
+
+    function drop(e) {
+        e.preventDefault();
+        const data = e.dataTransfer.getData('text');
+        const dropZone = e.target;
+        if (dropZone.textContent.toLowerCase() === data) {
+            dropZone.innerHTML += '<span style="color:green;">★</span>';
+        } else {
+            dropZone.innerHTML += '<span style="color:red;">★</span>';
+        }
+    }
 });
 </script>
 
