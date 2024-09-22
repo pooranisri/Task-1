@@ -44,7 +44,7 @@
         .content.active {
             display: block;
         }
-        .item, .game-item {
+        .item {
             margin: 10px;
             padding: 10px;
             background: #98fb98; /* Pale Green */
@@ -71,10 +71,13 @@
         }
         .game-area {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px 0;
         }
         .match {
+            width: 50px;
+            height: 50px;
             font-size: 24px;
             padding: 10px;
             cursor: pointer;
@@ -83,6 +86,9 @@
             border-radius: 5px;
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
             transition: background 0.3s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .match:hover {
             background: #f0e68c; /* Khaki */
@@ -109,6 +115,10 @@
         <button class="navBtn" onclick="showCategory('vehicles')">Vehicles</button>
     </div>
     <div id="flashcard-container"></div>
+    <div>
+        <button class="navBtn" id="prevBtn" onclick="changeItem(-1)" disabled>Prev</button>
+        <button class="navBtn" id="nextBtn" onclick="changeItem(1)" disabled>Next</button>
+    </div>
 </div>
 <div id="game" class="content">
     <h2>Matching Game</h2>
@@ -139,11 +149,23 @@ document.addEventListener('DOMContentLoaded', function() {
         'vehicles': ['car', 'bus', 'train']
     };
 
+    let currentCategory = '';
+    let currentIndex = 0;
+
     function showCategory(category) {
+        currentCategory = category;
+        currentIndex = 0; // Reset index when changing category
+        updateFlashcards();
+        updateNavButtons();
+    }
+
+    function updateFlashcards() {
         const container = document.getElementById('flashcard-container');
         container.innerHTML = ''; // Clear previous items
-        flashcards[category].forEach(item => {
-            let div = document.createElement('div');
+        const items = flashcards[currentCategory];
+        if (items.length > 0) {
+            const item = items[currentIndex];
+            const div = document.createElement('div');
             div.className = 'item';
             div.innerHTML = `
                 <img src="${item}.jpg" alt="${item}" style="width:100px;height:100px;">
@@ -152,15 +174,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button class="audioBtn" onclick="playAudio('${item}')">Listen</button>
             `;
             container.appendChild(div);
-        });
-        container.innerHTML += `
-            <button class="navBtn" onclick="changeItem(-1)">Prev</button>
-            <button class="navBtn" onclick="changeItem(1)">Next</button>
-        `;
+        }
+        updateNavButtons();
     }
 
     function playAudio(word) {
         new Audio(`${word}.mp3`).play();
+    }
+
+    function updateNavButtons() {
+        const items = flashcards[currentCategory];
+        document.getElementById('prevBtn').disabled = currentIndex === 0;
+        document.getElementById('nextBtn').disabled = currentIndex === items.length - 1;
+    }
+
+    function changeItem(direction) {
+        const items = flashcards[currentCategory];
+        currentIndex += direction;
+        updateFlashcards();
     }
 
     let pairs = [];
@@ -177,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         pairs.forEach(letter => {
             const div = document.createElement('div');
             div.className = 'match';
-            div.textContent = '?';
+            div.textContent = letter;
             div.dataset.value = letter;
             div.onclick = matchLetter;
             gameArea.appendChild(div);
@@ -185,18 +216,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function matchLetter() {
-        this.textContent = this.dataset.value;
-        const selected = document.querySelectorAll('.match:not(.matched)');
+        const selected = document.querySelectorAll('.match.selected');
+        if (this.classList.contains('selected')) {
+            this.classList.remove('selected');
+        } else {
+            this.classList.add('selected');
+        }
         if (selected.length === 2) {
             if (selected[0].dataset.value.toLowerCase() === selected[1].dataset.value.toLowerCase()) {
-                selected[0].classList.add('matched');
-                selected[1].classList.add('matched');
+                selected.forEach(el => el.classList.add('matched'));
                 greenStars++;
             } else {
                 redStars++;
                 setTimeout(() => {
-                    selected[0].textContent = '?';
-                    selected[1].textContent = '?';
+                    selected.forEach(el => el.classList.remove('selected'));
                 }, 1000);
             }
             updateStars();
