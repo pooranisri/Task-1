@@ -143,10 +143,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const flashcards = {
-        'fruits': ['apple', 'banana', 'cherry'],
-        'vegetables': ['carrot', 'broccoli', 'tomato'],
-        'colors': ['red', 'blue', 'green'],
-        'vehicles': ['car', 'bus', 'train']
+        'fruits': ['apple', 'banana', 'cherry', 'grape', 'orange'],
+        'vegetables': ['carrot', 'broccoli', 'tomato', 'pepper', 'onion'],
+        'colors': ['red', 'blue', 'green', 'yellow', 'purple'],
+        'vehicles': ['car', 'bus', 'train', 'plane', 'bike']
     };
 
     let currentCategory = '';
@@ -224,7 +224,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (selected.length === 2) {
             if (selected[0].dataset.value.toLowerCase() === selected[1].dataset.value.toLowerCase()) {
-                selected.forEach(el => el.classList.add('matched'));
+                selected.forEach(el => {
+                    el.classList.add('matched');
+                    el.style.visibility = 'hidden'; // Hide matched items immediately
+                });
                 greenStars++;
             } else {
                 redStars++;
