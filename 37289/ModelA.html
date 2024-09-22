@@ -2,16 +2,20 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Learn with Fun</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kids Learning App</title>
 <style>
-    body { background-color: #33FFBD; font-family: 'Arial', sans-serif; }
-    .nav-tabs { border-bottom: 2px solid #FF5733; }
-    .nav-link { color: #FF5733; }
-    .nav-link.active { background-color: #FF5733 !important; color: white !important; }
-    .card { margin: 10px; cursor: pointer; transition: transform 0.2s; }
-    .card:hover { transform: scale(1.05); }
-    #gameArea { display: none; }
+    body { font-family: 'Arial', sans-serif; background-color: #ffebcd; margin: 0; padding: 0; }
+    .tab { overflow: hidden; background-color: #ff6f61; }
+    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; color: white; }
+    .tab button:hover { background-color: #ff9980; }
+    .tab button.active { background-color: #ff4c4c; }
+    .tabcontent { display: none; padding: 6px 12px; border-top: none; animation: fadeEffect 1s; }
+    @keyframes fadeEffect { from {opacity: 0;} to {opacity: 1;} }
+    .category, .game-item { margin: 10px; padding: 10px; background: #98fb98; border-radius: 8px; text-align: center; cursor: pointer; }
+    .flashcard { width: 200px; height: 200px; background: #fff; margin: 10px auto; display: flex; align-items: center; justify-content: center; border-radius: 10px; }
+    .audio-btn { background: #40e0d0; border: none; border-radius: 5px; padding: 10px; margin-top: 5px; cursor: pointer; }
+    .nav-btn { margin: 10px; padding: 10px 20px; background: #ff6347; color: white; border: none; border-radius: 5px; cursor: pointer; }
     .star { font-size: 24px; }
     .green-star { color: green; }
     .red-star { color: red; }
@@ -19,109 +23,134 @@
 </head>
 <body>
 
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="flashcards-tab" data-bs-toggle="tab" data-bs-target="#flashcards" type="button" role="tab" aria-controls="flashcards" aria-selected="true">Flashcards</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="games-tab" data-bs-toggle="tab" data-bs-target="#games" type="button" role="tab" aria-controls="games" aria-selected="false">Games</button>
-  </li>
-</ul>
-
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="flashcards" role="tabpanel" aria-labelledby="flashcards-tab">
-    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="fruits-tab" data-bs-toggle="pill" data-bs-target="#fruits" type="button" role="tab" aria-controls="fruits" aria-selected="true">Fruits</button>
-      </li>
-      <!-- Add similar buttons for Vegetables, Colors, Vehicles -->
-    </ul>
-    <div class="tab-content" id="pills-tabContent">
-      <div class="tab-pane fade show active" id="fruits" role="tabpanel" aria-labelledby="fruits-tab">
-        <div id="fruitsContent" class="d-flex flex-wrap justify-content-center"></div>
-      </div>
-      <!-- Content panes for other categories -->
-    </div>
-  </div>
-  
-  <div class="tab-pane fade" id="games" role="tabpanel" aria-labelledby="games-tab">
-    <div id="gameArea" class="text-center"></div>
-  </div>
+<div class="tab">
+  <button class="tablinks" onclick="openTab(event, 'Flashcards')">Flashcards</button>
+  <button class="tablinks" onclick="openTab(event, 'Game')">Game</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div id="Flashcards" class="tabcontent">
+  <div class="category" onclick="showItems('Fruits')">Fruits</div>
+  <div class="category" onclick="showItems('Vegetables')">Vegetables</div>
+  <div class="category" onclick="showItems('Colors')">Colors</div>
+  <div class="category" onclick="showItems('Vehicles')">Vehicles</div>
+  <div id="flashcard-container"></div>
+</div>
+
+<div id="Game" class="tabcontent">
+  <h3>Matching Game</h3>
+  <div id="game-container"></div>
+  <div id="result"></div>
+</div>
+
 <script>
-    const categories = ['fruits', 'vegetables', 'colors', 'vehicles'];
-    const flashcardsData = {}; // This will be populated from an API
-
-    // Mock API call - replace with actual API
-    function fetchData(category) {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                resolve({
-                    'apple': { image: 'apple.jpg', audio: 'apple.mp3' },
-                    'banana': { image: 'banana.jpg', audio: 'banana.mp3' }
-                    // ... more items
-                });
-            }, 500);
-        });
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
 
-    categories.forEach(category => {
-        document.getElementById(`${category}-tab`).addEventListener('click', async () => {
-            if (!flashcardsData[category]) {
-                flashcardsData[category] = await fetchData(category);
-            }
-            displayFlashcards(category, flashcardsData[category]);
-        });
+const items = {
+    Fruits: [{name: 'Apple', audio: 'apple.mp3'}, {name: 'Banana', audio: 'banana.mp3'}],
+    Vegetables: [{name: 'Carrot', audio: 'carrot.mp3'}, {name: 'Broccoli', audio: 'broccoli.mp3'}],
+    Colors: [{name: 'Red', audio: 'red.mp3'}, {name: 'Blue', audio: 'blue.mp3'}],
+    Vehicles: [{name: 'Car', audio: 'car.mp3'}, {name: 'Bike', audio: 'bike.mp3'}]
+};
+
+let currentCategory = null;
+let currentIndex = 0;
+
+function showItems(category) {
+    currentCategory = category;
+    currentIndex = 0;
+    displayItem();
+}
+
+function displayItem() {
+    if (!currentCategory) return;
+    const container = document.getElementById('flashcard-container');
+    container.innerHTML = '';
+    const item = items[currentCategory][currentIndex];
+    if (item) {
+        container.innerHTML = `
+            <div class="flashcard"><h2>${item.name}</h2></div>
+            <button class="audio-btn" onclick="playAudio('${item.audio}')">Play Sound</button>
+            <div>
+                <button class="nav-btn" onclick="changeItem(-1)">Prev</button>
+                <button class="nav-btn" onclick="changeItem(1)">Next</button>
+            </div>
+        `;
+    }
+}
+
+function changeItem(dir) {
+    currentIndex += dir;
+    if (currentIndex < 0) currentIndex = items[currentCategory].length - 1;
+    else if (currentIndex >= items[currentCategory].length) currentIndex = 0;
+    displayItem();
+}
+
+function playAudio(file) {
+    new Audio(file).play();
+}
+
+// Game logic
+const gameContainer = document.getElementById('game-container');
+const result = document.getElementById('result');
+let correctMatches = 0;
+
+function startGame() {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    let gameItems = letters.map(l => ({lower: l.toLowerCase(), upper: l, matched: false}));
+    gameItems = shuffle(gameItems);
+
+    gameContainer.innerHTML = '';
+    gameItems.forEach(item => {
+        gameContainer.innerHTML += `<div class="game-item" data-lower="${item.lower}" onclick="checkMatch(this, '${item.upper}')">${item.upper}</div>`;
+        gameContainer.innerHTML += `<div class="game-item" data-upper="${item.upper}" onclick="checkMatch(this, '${item.lower}')">${item.lower}</div>`;
     });
+}
 
-    function displayFlashcards(category, data) {
-        const contentDiv = document.getElementById(`${category}Content`);
-        contentDiv.innerHTML = '';
-        Object.keys(data).forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card' + ' text-center';
-            card.innerHTML = `<img src="${data[item].image}" class="card-img-top" alt="${item}" style="width: 100px; height: 100px; object-fit: cover;">
-                              <div class="card-body">
-                                <p class="card-text">${item}</p>
-                              </div>`;
-            card.onclick = () => new Audio(data[item].audio).play();
-            contentDiv.appendChild(card);
-        });
+function checkMatch(element, match) {
+    const clicked = element.getAttribute(`data-${element.innerHTML === match ? 'lower' : 'upper'}`);
+    if (clicked === match) {
+        element.style.background = '#90ee90';
+        correctMatches++;
+    } else {
+        element.style.background = '#ffcccb';
     }
+    element.onclick = null;
 
-    // Game Logic
-    function setupGame() {
-        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const gameArea = document.getElementById('gameArea');
-        gameArea.innerHTML = ''; // Clear previous game
-        letters.forEach(letter => {
-            const upper = document.createElement('span');
-            upper.textContent = letter;
-            upper.draggable = true;
-            upper.className = 'm-2 p-2 border';
-            const lower = document.createElement('span');
-            lower.textContent = letter.toLowerCase();
-            lower.className = 'm-2 p-2 border dropzone';
-            
-            gameArea.appendChild(upper);
-            gameArea.appendChild(lower);
-        });
-
-        // Basic drag and drop functionality - this needs refinement for actual use
-        gameArea.addEventListener('dragover', e => e.preventDefault());
-        gameArea.addEventListener('drop', function(e) {
-            e.preventDefault();
-            const data = e.dataTransfer.getData("text");
-            if (e.target.className.includes('dropzone')) {
-                const result = (data.toLowerCase() === e.target.textContent) ? 'green-star' : 'red-star';
-                e.target.innerHTML += `<span class="star ${result}">*</span>`;
-            }
-        });
+    if (document.querySelectorAll('.game-item:not([onclick])').length === 52) {
+        endGame();
     }
+}
 
-    document.getElementById('games-tab').addEventListener('click', setupGame);
+function endGame() {
+    if (correctMatches > 5) {
+        result.innerHTML = '<h2>Congratulations! You did great!</h2>';
+    } else {
+        result.innerHTML = '<button onclick="location.reload()">Try Again</button>';
+    }
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+startGame();
+openTab(event, 'Flashcards');
 </script>
 
 </body>

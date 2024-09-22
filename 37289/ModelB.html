@@ -2,130 +2,208 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kids Learning App</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <style>
-    body { font-family: 'Comic Sans MS', cursive, sans-serif; background: #FFF3E0; margin: 0; padding: 20px; }
-    .tab { overflow: hidden; border-bottom: 1px solid #ccc; background-color: #FFB74D; }
-    .tab button { background-color: inherit; float: left; border: none; outline: none; cursor: pointer; padding: 14px 16px; transition: 0.3s; font-size: 17px; }
-    .tab button:hover { background-color: #FFD580; }
-    .tab button.active { background-color: #FFA000; }
-    .tabcontent { display: none; padding: 6px 12px; border-top: none; }
-    .category-btn { margin: 5px; padding: 10px; font-size: 16px; background-color: #9CCC65; border: none; border-radius: 5px; cursor: pointer; color: white; }
-    .flashcard { background: #A5D6A7; border-radius: 10px; padding: 20px; margin-top: 20px; text-align: center; }
-    .flashcard img { max-width: 100%; height: auto; border-radius: 8px; }
-    #gameArea { background: #80DEEA; padding: 20px; border-radius: 10px; margin-top: 20px; }
-    .letter { background: white; border: 2px solid #0097A7; border-radius: 50%; width: 50px; height: 50px; line-height: 50px; text-align: center; margin: 5px; display: inline-block; cursor: pointer; }
-    .star { font-size: 30px; }
-    .green-star { color: #4CAF50; }
-    .red-star { color: #F44336; }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #fff8dc; /* Cornsilk for a warm background */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        width: 80%;
+        background: #98fb98; /* Pale Green */
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .tabs {
+        display: flex;
+        justify-content: space-around;
+        background: #ffa07a; /* Light Salmon */
+        border-radius: 10px 10px 0 0;
+    }
+    .tab {
+        padding: 10px 20px;
+        cursor: pointer;
+        color: #fff;
+        transition: background 0.3s;
+    }
+    .tab:hover, .tab.active {
+        background: #ff6347; /* Tomato */
+    }
+    .content {
+        display: none;
+        padding: 20px;
+        text-align: center;
+    }
+    .content.active {
+        display: block;
+    }
+    .item, .game-item {
+        margin: 10px;
+        padding: 10px;
+        background: #fff;
+        border-radius: 8px;
+        display: inline-block;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+    .audioBtn {
+        background: #4682b4; /* SteelBlue */
+        border: none;
+        color: white;
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-top: 5px;
+    }
+    .game-area {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .match {
+        font-size: 24px;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .star {
+        font-size: 30px;
+    }
+    .green { color: green; }
+    .red { color: red; }
 </style>
 </head>
 <body>
 
-<div class="tab">
-  <button class="tablinks" onclick="openTab(event, 'Flashcards')">Flashcards</button>
-  <button class="tablinks" onclick="openTab(event, 'Games')">Games</button>
-</div>
-
-<div id="Flashcards" class="tabcontent">
-  <button class="category-btn" onclick="loadCategory('Fruits')">Fruits</button>
-  <button class="category-btn" onclick="loadCategory('Vegetables')">Vegetables</button>
-  <button class="category-btn" onclick="loadCategory('Colors')">Colors</button>
-  <button class="category-btn" onclick="loadCategory('Vehicles')">Vehicles</button>
-  <div class="flashcard" id="flashcardDisplay"></div>
-</div>
-
-<div id="Games" class="tabcontent">
-  <div id="gameArea"></div>
+<div class="container">
+    <div class="tabs">
+        <div class="tab active" data-tab="flashcards">Flashcards</div>
+        <div class="tab" data-tab="game">Game</div>
+    </div>
+    <div id="flashcards" class="content active">
+        <!-- Categories and Flashcards will be dynamically added here -->
+    </div>
+    <div id="game" class="content">
+        <div class="game-area"></div>
+        <div id="result"></div>
+    </div>
 </div>
 
 <script>
-function openTab(evt, tabName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-const categories = {
-    'Fruits': ['Apple', 'Banana', 'Orange'],
-    'Vegetables': ['Carrot', 'Broccoli', 'Tomato'],
-    'Colors': ['Red', 'Blue', 'Green'],
-    'Vehicles': ['Car', 'Bus', 'Bicycle']
-};
-
-function loadCategory(category) {
-    const display = document.getElementById('flashcardDisplay');
-    const item = categories[category][Math.floor(Math.random() * categories[category].length)];
-    // Placeholder for image and audio - in real-world use, replace with actual API calls
-    display.innerHTML = `<img src="placeholder.jpg" alt="${item}"><br><button onclick="playSound('${item}')">Pronounce</button>`;
-}
-
-function playSound(word) {
-    let audio = new Audio();
-    // This would typically fetch an audio file or use text-to-speech API
-    audio.src = `sound/${word.toLowerCase()}.mp3`; // Placeholder
-    audio.play();
-}
-
-// Game setup
-function setupGame() {
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const gameArea = document.getElementById('gameArea');
-    let currentMatch = {lower: null, upper: null};
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.content');
     
-    for (let i = 0; i < letters.length; i++) {
-        const lower = document.createElement('div');
-        lower.className = 'letter';
-        lower.textContent = letters[i].toLowerCase();
-        lower.onclick = () => selectLetter(lower, 'lower');
-        
-        const upper = document.createElement('div');
-        upper.className = 'letter';
-        upper.textContent = letters[i];
-        upper.onclick = () => selectLetter(upper, 'upper');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        });
+    });
 
-        gameArea.appendChild(lower);
-        gameArea.appendChild(upper);
+    // Flashcards Data
+    const flashcards = {
+        'fruits': ['apple', 'banana', 'cherry'],
+        'vegetables': ['carrot', 'broccoli', 'tomato'],
+        'colors': ['red', 'blue', 'green'],
+        'vehicles': ['car', 'bus', 'train']
+    };
+
+    // Populate Flashcards
+    const flashcardDiv = document.getElementById('flashcards');
+    for(let category in flashcards) {
+        flashcards[category].forEach(item => {
+            let div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `<img src="${item}.jpg" alt="${item}" style="width:100px;height:100px;"><br>${item}<br>
+            <button class="audioBtn" onclick="playAudio('${item}')">Listen</button>`;
+            flashcardDiv.appendChild(div);
+        });
     }
 
-    function selectLetter(letter, type) {
-        if (currentMatch[type] === null) {
-            currentMatch[type] = letter;
-            letter.style.backgroundColor = '#FFEB3B';
-            if (currentMatch.lower && currentMatch.upper) {
-                checkMatch();
+    // Audio function
+    function playAudio(word) {
+        let audio = new Audio(`${word}.mp3`);
+        audio.play();
+    }
+
+    // Game Logic
+    const gameArea = document.querySelector('.game-area');
+    const resultDiv = document.getElementById('result');
+    let greenStars = 0, redStars = 0;
+    let pairs = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function startGame() {
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        pairs = [...letters, ...letters.map(char => char.toLowerCase())];
+        pairs = shuffle(pairs);
+
+        gameArea.innerHTML = '';
+        pairs.forEach(letter => {
+            const div = document.createElement('div');
+            div.className = 'match';
+            div.textContent = '?';
+            div.dataset.value = letter;
+            div.onclick = matchLetter;
+            gameArea.appendChild(div);
+        });
+    }
+
+    function matchLetter() {
+        this.textContent = this.dataset.value;
+        let selected = document.querySelectorAll('.match:not(.matched)');
+        if (selected.length === 2) {
+            if (selected[0].dataset.value.toLowerCase() === selected[1].dataset.value.toLowerCase()) {
+                selected[0].classList.add('matched');
+                selected[1].classList.add('matched');
+                greenStars++;
+            } else {
+                redStars++;
+                setTimeout(() => {
+                    selected[0].textContent = '?';
+                    selected[1].textContent = '?';
+                }, 1000);
+            }
+            updateStars();
+            if (document.querySelectorAll('.matched').length === pairs.length) {
+                endGame();
             }
         }
     }
 
-    function checkMatch() {
-        const lower = currentMatch.lower.textContent;
-        const upper = currentMatch.upper.textContent;
-        const result = document.createElement('span');
-        result.className = 'star';
-        result.textContent = lower === upper.toLowerCase() ? '★' : '✩';
-        result.className += lower === upper.toLowerCase() ? ' green-star' : ' red-star';
-        gameArea.appendChild(result);
-        resetSelection();
+    function updateStars() {
+        resultDiv.innerHTML = 'Stars: ' + '<span class="star green">★</span>'.repeat(greenStars) + 
+                               '<span class="star red">★</span>'.repeat(redStars);
     }
 
-    function resetSelection() {
-        currentMatch.lower.style.backgroundColor = '';
-        currentMatch.upper.style.backgroundColor = '';
-        currentMatch = {lower: null, upper: null};
+    function endGame() {
+        if (greenStars > 5) {
+            alert('Congratulations! You did great!');
+        } else {
+            alert('Try again! Let\'s go back to learning.');
+            location.reload(); // Simple refresh for demo
+        }
     }
-}
 
-document.getElementById('Games').addEventListener('click', setupGame);
+    // Initialize game
+    startGame();
+});
 </script>
 
 </body>
