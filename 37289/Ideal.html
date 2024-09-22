@@ -3,209 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kid's EduFun</title>
+    <title>Kids Learning App</title>
     <style>
         body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #FFFAF0;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff8dc; /* Cornsilk */
             margin: 0;
             padding: 0;
-            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
         }
-        .header {
-            background: #FF6F61;
-            padding: 20px;
-            color: white;
-            text-align: center;
-        }
-        .btn {
-            background: #4ECFC4;
-            border: none;
-            padding: 15px 30px;
-            color: white;
-            font-size: 1.5rem;
-            margin: 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn:hover {
-            background: #3BBBA3;
-        }
-        .content-box {
-            background: #98FB98;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 20px 0;
-            transition: transform 0.2s;
-        }
-        .content-box:hover {
-            transform: scale(1.02);
-        }
-        #notification {
-            background: #FFD700;
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            background: #ffa07a; /* Light Salmon */
+            width: 100%;
             padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #fff;
+            transition: background 0.3s;
+        }
+        .tab:hover, .tab.active {
+            background: #ff6347; /* Tomato */
+        }
+        .content {
             display: none;
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            border-radius: 5px;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-        }
-        /* Modal Styles */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgb(210, 198, 198); 
-            background-color: rgba(226, 224, 224, 0.4); 
-            padding-top: 60px;
-        }
-        .modal-content {
-            background-color: #f5eeee;
-            margin: 5% auto; 
             padding: 20px;
-            border: 1px solid #f0e1e1;
-            width: 80%; 
-            max-width: 400px;
-            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            flex: 1;
+            overflow-y: auto;
         }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
+        .content.active {
+            display: block;
         }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
+        .item, .game-item {
+            margin: 10px;
+            padding: 10px;
+            background: #98fb98; /* Pale Green */
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .audioBtn {
+            background: #4682b4; /* SteelBlue */
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .navBtn {
+            margin: 5px;
+            padding: 5px 10px;
+            background: #ff6347; /* Tomato */
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
+        .game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .match {
+            font-size: 24px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 5px;
+            background: #fff;
+            border-radius: 5px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
+        .match:hover {
+            background: #f0e68c; /* Khaki */
+        }
+        .star {
+            font-size: 30px;
+        }
+        .green { color: green; }
+        .red { color: red; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>Kid's EduFun</h1>
-    <p>Learn and Play!</p>
+<div class="tabs">
+    <div class="tab active" data-tab="flashcards">Flashcards</div>
+    <div class="tab" data-tab="game">Game</div>
 </div>
-
-<div class="container">
-    <div id="userProfile">
-        <img src="default_avatar.png" id="avatar" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
-        <button class="btn" onclick="showPersonalization()">Personalize</button>
+<div id="flashcards" class="content active">
+    <h2>Flashcards</h2>
+    <div>
+        <button class="navBtn" onclick="showCategory('fruits')">Fruits</button>
+        <button class="navBtn" onclick="showCategory('vegetables')">Vegetables</button>
+        <button class="navBtn" onclick="showCategory('colors')">Colors</button>
+        <button class="navBtn" onclick="showCategory('vehicles')">Vehicles</button>
     </div>
-
-    <div id="mainContent" class="content-box">
-        <h2>Select a topic to get started:</h2>
-        <button class="btn" onclick="loadContent('Rhymes')">Rhymes</button>
-        <button class="btn" onclick="loadContent('Stories')">Stories</button>
-        <button class="btn" onclick="loadContent('Numbers')">Numbers</button>
-        <button class="btn" onclick="loadContent('Alphabets')">Alphabets</button>
-    </div>
-
-    <div id="dynamicContent" class="content-box">
-        <h2>Welcome to EduFun!</h2>
-        <p>Please select a topic to see the content.</p>
-    </div>
-    <div id="notification"></div>
+    <div id="flashcard-container"></div>
 </div>
-<div id="parentalControlBtn" class="content-box">
-    <button class="btn" onclick="showParentalControl()">Parental Controls</button>
-</div>
-
-<!-- Modal for Personalization -->
-<div id="personalizationModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <h2>Personalize Your Avatar now</h2>
-        <label for="avatarChoice">Choose an avatar:</label>
-        <select id="avatarChoice" onchange="changeAvatar()">
-            <option value="default_avatar.png">Default Avatar</option>
-            <option value="avatar1.png">Avatar 1</option>
-            <option value="avatar2.png">Avatar 2</option>
-        </select>
-        <h2>Choose a Theme Color</h2>
-        <input type="color" id="themeColor" onchange="changeTheme()">
-    </div>
+<div id="game" class="content">
+    <h2>Matching Game</h2>
+    <div class="game-area"></div>
+    <div id="result"></div>
 </div>
 
 <script>
-    function loadContent(type) {
-        let content;
-        switch (type) {
-            case 'Rhymes':
-                content = `<h2>Mary had a little lamb</h2><p>Mary had a little lamb His fleece was white as snow, yeah...</p>`;
-                break;
-            case 'Stories':
-                content = `<h2>The lion and the mouse</h2><p>Once upon a time, a lion was sleeping in a forest...</p>`;
-                break;
-            case 'Numbers':
-                content = `<h2>Count starts!!!</h2><p>1, 2, 3, 4, 5!</p>`;
-                break;
-            case 'Alphabets':
-                content = `<h2>A for Alligator</h2><p>Learn your ABCs!</p>`;
-                break;
-            default:
-                content = `<h2>Welcome!</h2><p>Please select a topic.</p>`;
+document.addEventListener('DOMContentLoaded', function() {
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            if (tabName === 'game') startGame(); // Start game when tab is opened
+        });
+    });
+
+    const flashcards = {
+        'fruits': ['apple', 'banana', 'cherry'],
+        'vegetables': ['carrot', 'broccoli', 'tomato'],
+        'colors': ['red', 'blue', 'green'],
+        'vehicles': ['car', 'bus', 'train']
+    };
+
+    function showCategory(category) {
+        const container = document.getElementById('flashcard-container');
+        container.innerHTML = ''; // Clear previous items
+        flashcards[category].forEach(item => {
+            let div = document.createElement('div');
+            div.className = 'item';
+            div.innerHTML = `
+                <img src="${item}.jpg" alt="${item}" style="width:100px;height:100px;">
+                <br>${item}
+                <br>
+                <button class="audioBtn" onclick="playAudio('${item}')">Listen</button>
+            `;
+            container.appendChild(div);
+        });
+        container.innerHTML += `
+            <button class="navBtn" onclick="changeItem(-1)">Prev</button>
+            <button class="navBtn" onclick="changeItem(1)">Next</button>
+        `;
+    }
+
+    function playAudio(word) {
+        new Audio(`${word}.mp3`).play();
+    }
+
+    let pairs = [];
+    let greenStars = 0;
+    let redStars = 0;
+
+    function startGame() {
+        const gameArea = document.querySelector('.game-area');
+        const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        pairs = [...letters, ...letters.map(char => char.toLowerCase())];
+        pairs = shuffle(pairs);
+
+        gameArea.innerHTML = '';
+        pairs.forEach(letter => {
+            const div = document.createElement('div');
+            div.className = 'match';
+            div.textContent = '?';
+            div.dataset.value = letter;
+            div.onclick = matchLetter;
+            gameArea.appendChild(div);
+        });
+    }
+
+    function matchLetter() {
+        this.textContent = this.dataset.value;
+        const selected = document.querySelectorAll('.match:not(.matched)');
+        if (selected.length === 2) {
+            if (selected[0].dataset.value.toLowerCase() === selected[1].dataset.value.toLowerCase()) {
+                selected[0].classList.add('matched');
+                selected[1].classList.add('matched');
+                greenStars++;
+            } else {
+                redStars++;
+                setTimeout(() => {
+                    selected[0].textContent = '?';
+                    selected[1].textContent = '?';
+                }, 1000);
+            }
+            updateStars();
+            if (document.querySelectorAll('.matched').length === pairs.length) {
+                endGame();
+            }
         }
-        document.getElementById('dynamicContent').innerHTML = content;
     }
 
-    function showPersonalization() {
-        document.getElementById('personalizationModal').style.display = "block";
+    function updateStars() {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = 'Stars: ' + '<span class="star green">★</span>'.repeat(greenStars) + 
+                               '<span class="star red">★</span>'.repeat(redStars);
     }
 
-    function closeModal() {
-        document.getElementById('personalizationModal').style.display = "none";
+    function endGame() {
+        if (greenStars > 5) {
+            alert('Congratulations! You did great!');
+        } else {
+            alert('Try again! Let\'s go back to learning.');
+            location.reload();
+        }
     }
 
-    function changeAvatar() {
-        const avatarSelect = document.getElementById('avatarChoice');
-        document.getElementById('avatar').src = avatarSelect.value;
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
     }
-
-    function changeTheme() {
-        const themeColor = document.getElementById('themeColor').value;
-        document.body.style.backgroundColor = themeColor;
-    }
-
-    function showParentalControl() {
-    alert(`Time limit can be set to 60 minutes.`);
-}
-
-
-function notify(message) {
-    const notific = document.getElementById('notification');
-    notific.innerText = message;  // Set the notification message
-    notific.style.display = 'block'; // Show the notification
-    notific.style.backgroundColor = "#FFD700"; // Optional: Set a background color for the notification
-    notific.style.padding = "10px"; // Add padding for better visibility
-    notific.style.borderRadius = "5px"; // Rounded corners
-    notific.style.position = "fixed"; // Fix the position
-    notific.style.bottom = "20px"; // Position it at the bottom
-    notific.style.right = "20px"; // Position it on the right
-    notific.style.boxShadow = "0 5px 10px rgba(0, 0, 0, 0.3)"; // Add shadow for better appearance
-
-    // Automatically hide the notification after 5 seconds
-    setTimeout(() => {
-        notific.style.display = 'none';
-    }, 5000);
-}
-
-// Example usage of the notify function
-window.onload = () => {
-    notify('Welcome back! Check out our new story today!');
-};
-
+});
 </script>
 
 </body>
