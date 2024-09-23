@@ -81,6 +81,10 @@
         .letter:hover {
             background-color: #e0e0e0;
         }
+        .button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -99,8 +103,8 @@
             <div class="category" onclick="showCategory('vehicles')">Vehicles</div>
         </div>
         <div id="flashcard-content" class="image-container"></div>
-        <button class="button" onclick="prevImage()">Prev</button>
-        <button class="button" onclick="nextImage()">Next</button>
+        <button class="button" id="prev-button" onclick="prevImage()">Prev</button>
+        <button class="button" id="next-button" onclick="nextImage()">Next</button>
     </div>
 
     <div id="games" class="tab">
@@ -193,15 +197,17 @@
                 <p>${content.name}</p>
                 <button class="button" onclick="playAudio('${content.name}')">Audio</button>
             `;
+            document.getElementById('prev-button').disabled = currentIndex === 0;
+            document.getElementById('next-button').disabled = currentIndex === flashcards[currentCategory].length - 1;
         }
 
         function prevImage() {
-            currentIndex = (currentIndex > 0) ? currentIndex - 1 : flashcards[currentCategory].length - 1;
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : 0;
             updateFlashcard();
         }
 
         function nextImage() {
-            currentIndex = (currentIndex < flashcards[currentCategory].length - 1) ? currentIndex + 1 : 0;
+            currentIndex = (currentIndex < flashcards[currentCategory].length - 1) ? currentIndex + 1 : flashcards[currentCategory].length - 1;
             updateFlashcard();
         }
 
@@ -264,8 +270,8 @@
         }
 
         function displayStar() {
-            if (greenStars > 5) {
-                alert('Congratulations! You matched more than 5 letters!');
+            if (greenStars === 5) {
+                alert('Congratulations! You matched 5 letters!');
             }
         }
 
