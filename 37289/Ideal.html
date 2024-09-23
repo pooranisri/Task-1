@@ -44,24 +44,15 @@
         .active {
             display: block;
         }
-        .category {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
-        }
-        .flashcard {
-            text-align: center;
-            margin: 20px;
-        }
         .game-container {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
             margin-top: 20px;
         }
         .match {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
             margin: 10px;
         }
         .match div {
@@ -82,6 +73,7 @@
         .star {
             font-size: 40px;
             display: none;
+            margin: 5px;
         }
         .congratulations {
             display: none;
@@ -123,42 +115,17 @@
     <div class="game-container">
         <div class="match" id="uppercaseContainer"></div>
         <div class="match" id="lowercaseContainer"></div>
-    </div>
-    <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
-    <div>
-        <button onclick="nextGame()">Next Game</button>
-        <button onclick="backToMain()">Back</button>
+        <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
+        <div>
+            <button onclick="nextGame()">Next Game</button>
+            <button onclick="backToMain()">Back</button>
+        </div>
     </div>
 </div>
 
 <script>
-    let currentCategory = '';
-    let currentIndex = 0;
-    const categories = {
-        fruits: [
-            { name: 'Apple', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Banana', img: 'https://via.placeholder.com/200/ffff00/000000?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Cherry', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Cherry', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
-        ],
-        vegetables: [
-            { name: 'Carrot', img: 'https://via.placeholder.com/200/ff7f00/ffffff?text=Carrot', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Broccoli', img: 'https://via.placeholder.com/200/008000/ffffff?text=Broccoli', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Pepper', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Pepper', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
-        ],
-        colors: [
-            { name: 'Red', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Red', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Green', img: 'https://via.placeholder.com/200/00ff00/ffffff?text=Green', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Blue', img: 'https://via.placeholder.com/200/0000ff/ffffff?text=Blue', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
-        ],
-        vehicles: [
-            { name: 'Car', img: 'https://via.placeholder.com/200/0000ff/ffffff?text=Car', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Bike', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Bike', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
-            { name: 'Truck', img: 'https://via.placeholder.com/200/ffff00/000000?text=Truck', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
-        ]
-    };
-
     let matchCount = 0;
-    let paired = [];
+    const totalMatchesNeeded = 5;
 
     function showTab(tab) {
         document.querySelectorAll('.content').forEach(div => div.classList.remove('active'));
@@ -170,83 +137,49 @@
         }
     }
 
-    function showFlashcard(category) {
-        currentCategory = category;
-        currentIndex = 0;
-        displayFlashcard();
-    }
-
-    function displayFlashcard() {
-        const card = categories[currentCategory][currentIndex];
-        document.getElementById('flashcardImage').src = card.img;
-        document.getElementById('flashcardContent').style.display = 'block';
-    }
-
-    function playAudio() {
-        const card = categories[currentCategory][currentIndex];
-        const audio = new Audio(card.audio);
-        audio.play();
-    }
-
-    function nextImage() {
-        if (currentIndex < categories[currentCategory].length - 1) {
-            currentIndex++;
-            displayFlashcard();
-        }
-    }
-
-    function prevImage() {
-        if (currentIndex > 0) {
-            currentIndex--;
-            displayFlashcard();
-        }
-    }
-
     function startGame() {
-        const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-        const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+        const upperCaseLetters = ['A', 'B', 'C', 'D', 'E'];
+        const lowerCaseLetters = ['a', 'b', 'c', 'd', 'e'];
         const uppercaseContainer = document.getElementById('uppercaseContainer');
         const lowercaseContainer = document.getElementById('lowercaseContainer');
         uppercaseContainer.innerHTML = '';
         lowercaseContainer.innerHTML = '';
         matchCount = 0;
-        paired = [];
 
-        // Shuffle and display letters
+        // Shuffle and display limited letters
         upperCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
-            const div = document.createElement('div');
-            div.textContent = letter;
-            div.addEventListener('click', () => checkMatch(letter, true));
+            const div = createLetterDiv(letter, true);
             uppercaseContainer.appendChild(div);
         });
 
         lowerCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
-            const div = document.createElement('div');
-            div.textContent = letter;
-            div.addEventListener('click', () => checkMatch(letter, false));
+            const div = createLetterDiv(letter, false);
             lowercaseContainer.appendChild(div);
         });
     }
 
+    function createLetterDiv(letter, isUpper) {
+        const div = document.createElement('div');
+        div.textContent = letter;
+        div.addEventListener('click', () => checkMatch(letter, isUpper));
+        return div;
+    }
+
     function checkMatch(letter, isUpper) {
         const targetLetter = isUpper ? letter.toLowerCase() : letter.toUpperCase();
-        const existingPair = paired.includes(targetLetter);
+        const existingPair = document.querySelector(`#lowercaseContainer div:contains(${targetLetter})`) || 
+                             document.querySelector(`#uppercaseContainer div:contains(${letter})`);
 
-        if (!existingPair) {
-            paired.push(targetLetter);
-            const isMatch = document.querySelector(`#lowercaseContainer div:contains(${targetLetter})`) || document.querySelector(`#uppercaseContainer div:contains(${letter})`);
-            if (isMatch) {
-                matchCount++;
-                displayStar(true);
-                // Hide matched pairs
-                isMatch.style.display = 'none';
-                document.querySelector(`#uppercaseContainer div:contains(${letter})`).style.display = 'none';
-                if (matchCount > 5) {
-                    document.getElementById('congratulationsMessage').style.display = 'block';
-                }
-            } else {
-                displayStar(false);
+        if (existingPair) {
+            matchCount++;
+            displayStar(true);
+            existingPair.style.display = 'none';
+            document.querySelector(`#uppercaseContainer div:contains(${letter})`).style.display = 'none';
+            if (matchCount > totalMatchesNeeded) {
+                document.getElementById('congratulationsMessage').style.display = 'block';
             }
+        } else {
+            displayStar(false);
         }
     }
 
@@ -254,7 +187,8 @@
         const star = document.createElement('div');
         star.className = 'star';
         star.textContent = correct ? '⭐' : '❌';
-        document.getElementById('uppercaseContainer').appendChild(star);
+        star.style.color = correct ? 'green' : 'red';
+        document.querySelector('.game-container').appendChild(star);
         star.style.display = 'block';
         setTimeout(() => star.style.display = 'none', 1000);
     }
