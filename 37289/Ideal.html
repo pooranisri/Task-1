@@ -90,9 +90,6 @@
         #congrats {
             display: none;
         }
-        .game-row {
-            margin: 20px 0;
-        }
         .button-container {
             margin-top: 20px;
         }
@@ -174,7 +171,7 @@
     let greenStars = 0;
     let selectedLowercase = '';
     let selectedUppercase = '';
-    let matchedPairs = []; // To track matched pairs
+    let matchedPairs = [];
 
     function displayCategories() {
         const categoriesDiv = document.getElementById('categories');
@@ -246,16 +243,15 @@
     }
 
     function generateRandomLetters() {
+        const commonLetters = 'abcde'; // Common letters for matching
         const lowercase = 'abcdefghijklmnopqrstuvwxyz';
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const randomLowercase = [lowercase[Math.floor(Math.random() * lowercase.length)]];
-        const randomUppercase = [uppercase[Math.floor(Math.random() * uppercase.length)]];
+        const randomLowercase = [...lowercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random lowercase letters
+        const randomUppercase = [...uppercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random uppercase letters
         
-        // Include more correct letters often
-        const correctLowercase = 'abcde'; // You can choose more letters as needed
         return {
-            lowercase: randomLowercase.concat(correctLowercase.split('').sort(() => Math.random() - 0.5)),
-            uppercase: randomUppercase.concat(correctLowercase.toUpperCase().split('').sort(() => Math.random() - 0.5)),
+            lowercase: randomLowercase.concat(commonLetters.split('').sort(() => Math.random() - 0.5)),
+            uppercase: randomUppercase.concat(commonLetters.toUpperCase().split('').sort(() => Math.random() - 0.5)),
         };
     }
 
@@ -279,15 +275,17 @@
             if (isMatch && !matchedPairs.includes(selectedLowercase + selectedUppercase)) {
                 greenStars++;
                 matchedPairs.push(selectedLowercase + selectedUppercase);
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #00FF00;">★</span>'; // Green star for correct match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
                 hideMatchedLetters(selectedLowercase, selectedUppercase);
+                resetSelections();
+                
+                // Show congratulations message if more than 5 stars
+                if (greenStars > 5) {
+                    document.getElementById('congrats').style.display = 'block';
+                }
             } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">★</span>'; // Red star for incorrect match
-            }
-            resetSelections();
-            // Show congratulations message if more than 5 stars
-            if (greenStars > 5) {
-                document.getElementById('congrats').style.display = 'block';
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
+                resetSelections(); // Allow user to try again
             }
         }
     }
@@ -305,17 +303,18 @@
     }
 
     function nextStep() {
-        if (greenStars > 5) {
-            document.getElementById('congrats').style.display = 'block';
+        if (matchedPairs.length >= 10) { // Assuming there are 10 letters to match
+            startGame(); // Start the next game set
         } else {
             showTab('flashcards'); // Return to the Flashcards tab
         }
-        startGame(); // Start the next game set
     }
 
     window.onload = () => {
         showTab('flashcards');
     };
+
+    displayCategories(); // Populate categories on load
 </script>
 
 </body>
