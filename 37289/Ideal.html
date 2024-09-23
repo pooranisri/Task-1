@@ -254,13 +254,13 @@
             if (firstSelection) {
                 // Check for match
                 if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
-                    letterElement.style.backgroundColor = '#90ee90'; // Light Green
-                    firstSelection.style.backgroundColor = '#90ee90'; // Light Green
+                    letterElement.style.backgroundColor = '#00FF00'; // Light Green
+                    firstSelection.style.backgroundColor = '#00FF00'; // Light Green
                     greenStars++;
                     displayStar();
                 } else {
-                    letterElement.style.backgroundColor = '#ffcccb'; // Light Red
-                    firstSelection.style.backgroundColor = '#ffcccb'; // Light Red
+                    letterElement.style.backgroundColor = '#FF0000'; // Light Red
+                    firstSelection.style.backgroundColor = '#FF0000'; // Light Red
                 }
                 firstSelection = null; // Reset selection
             } else {
