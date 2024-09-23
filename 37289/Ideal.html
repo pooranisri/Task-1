@@ -107,12 +107,7 @@
 
 <div id="flashcards" class="content">
     <h2>Flashcards</h2>
-    <div id="categories">
-        <button onclick="showCategory('fruits')">Fruits</button>
-        <button onclick="showCategory('vegetables')">Vegetables</button>
-        <button onclick="showCategory('colors')">Colors</button>
-        <button onclick="showCategory('vehicles')">Vehicles</button>
-    </div>
+    <div id="categories" style="margin-bottom: 20px;"></div>
     <div class="flashcard" id="flashcard-content"></div>
 </div>
 
@@ -133,7 +128,7 @@
     // Mock API data
     const mockData = {
         fruits: [
-            { name: 'Apple', img: 'https://images.app.goo.gl/LPM8JeBksgfXmi4cA', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
+            { name: 'Apple', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
             { name: 'Banana', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
         ],
         vegetables: [
@@ -166,8 +161,7 @@
         document.querySelectorAll('.content').forEach(div => div.style.display = 'none');
         document.getElementById(tab).style.display = 'block';
         if (tab === 'flashcards') {
-            displayCategories();
-            showCategory('fruits'); // Default to fruits when showing flashcards
+            displayCategories(); // Show categories when Flashcards is opened
         }
     }
 
