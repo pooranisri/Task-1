@@ -130,7 +130,7 @@
         <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <button id="next-button" class="next-button" onclick="startGame()">Next</button>
+        <button id="next-button" class="next-button" onclick="nextStep()">Next</button>
     </div>
 </div>
 
@@ -262,12 +262,14 @@
         // Show congratulations message if more than 5 stars
         if (greenStars > 5) {
             document.getElementById('congrats').style.display = 'block';
+        }
+    }
+
+    function nextStep() {
+        if (greenStars > 5) {
+            alert('Congratulations! You got more than 5 stars!');
         } else {
-            // Go back to main page after a brief delay
-            setTimeout(() => {
-                showTab('flashcards'); // Return to the Flashcards tab
-                startGame(); // Restart the game
-            }, 2000); // 2 seconds delay
+            showTab('flashcards'); // Return to the Flashcards tab
         }
     }
 
