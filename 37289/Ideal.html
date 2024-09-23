@@ -3,216 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Learning App</title>
+    <title>Letter Matching Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            text-align: center;
-            color: #ff6347; /* Tomato */
-        }
-        #tabs {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .letters {
+            display: flex;
             margin-bottom: 20px;
         }
-        .tab {
-            padding: 10px 20px;
-            margin: 0 5px;
-            background-color: #87cefa; /* LightSkyBlue */
-            border-radius: 5px;
+        .letter {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
             cursor: pointer;
-        }
-        .tab:hover {
-            background-color: #00bfff; /* DeepSkyBlue */
-        }
-        .content {
-            display: none;
-            text-align: center;
-        }
-        .active {
-            display: block;
-        }
-        .category {
-            margin-top: 20px;
-        }
-        img {
-            width: 100px;
-            height: auto;
-            margin: 10px;
-            transition: transform 0.2s; /* Animation */
-        }
-        img:hover {
-            transform: scale(1.1);
-        }
-        .audio-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #32cd32; /* LimeGreen */
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .audio-button:hover {
-            background-color: #228b22; /* ForestGreen */
-        }
-        .navigation {
-            margin-top: 20px;
+            margin: 5px;
         }
         .star {
-            font-size: 30px;
+            font-size: 24px;
+            margin: 0 5px;
+        }
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<h1>Kids Learning App</h1>
-
-<div id="tabs">
-    <div class="tab" onclick="showTab('flashcards')">Flashcards</div>
-    <div class="tab" onclick="showTab('games')">Games</div>
-</div>
-
-<div id="flashcards" class="content active">
-    <h2>Choose a Category</h2>
-    <div class="category">
-        <button onclick="loadCategory('fruits')">Fruits</button>
-        <button onclick="loadCategory('vegetables')">Vegetables</button>
-        <button onclick="loadCategory('colors')">Colors</button>
-        <button onclick="loadCategory('vehicles')">Vehicles</button>
-    </div>
-    <div id="flashcardContent"></div>
-    <div class="navigation">
-        <button onclick="prevImage()">Prev</button>
-        <button onclick="nextImage()">Next</button>
-    </div>
-</div>
-
-<div id="games" class="content">
-    <h2>Matching Game</h2>
-    <div id="matchingGame"></div>
+<div class="game-container">
+    <h1>Match the Letters!</h1>
+    <div class="letters" id="lettersContainer"></div>
+    <div id="message" class="hidden"></div>
+    <button onclick="startGame()">Start Game</button>
 </div>
 
 <script>
-// Flashcard Data
-const flashcardData = {
-    fruits: [
-        { name: 'Apple', imageUrl: 'https://via.placeholder.com/100?text=Apple', audioUrl: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        { name: 'Banana', imageUrl: 'https://via.placeholder.com/100?text=Banana', audioUrl: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-    ],
-    vegetables: [
-        { name: 'Carrot', imageUrl: 'https://via.placeholder.com/100?text=Carrot', audioUrl: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-    ],
-    colors: [
-        { name: 'Red', imageUrl: 'https://via.placeholder.com/100/ff0000/ffffff?text=Red', audioUrl: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
-    ],
-    vehicles: [
-        { name: 'Car', imageUrl: 'https://via.placeholder.com/100?text=Car', audioUrl: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
-    ]
-};
+    const letters = 'abcdefghijklmnopqrstuvwxyz';
+    let matches = 0;
+    const totalMatches = 10;
 
-let currentCategory = '';
-let currentIndex = 0;
+    function startGame() {
+        matches = 0;
+        document.getElementById('lettersContainer').innerHTML = '';
+        document.getElementById('message').classList.add('hidden');
 
-// Show selected tab
-function showTab(tab) {
-    document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
-    document.getElementById(tab).classList.add('active');
-}
+        for (let i = 0; i < totalMatches; i++) {
+            const lower = letters[Math.floor(Math.random() * letters.length)];
+            const upper = lower.toUpperCase();
 
-// Load selected category
-function loadCategory(category) {
-    currentCategory = category;
-    currentIndex = 0; // Reset index
-    displayFlashcard();
-}
+            createLetterBox(lower, upper);
+        }
+    }
 
-// Display flashcard
-function displayFlashcard() {
-    const data = flashcardData[currentCategory];
-    
-    if (data && data.length > 0) {
-        const flashcardContent = `
-          <img src="${data[currentIndex].imageUrl}" alt="${data[currentIndex].name}">
-          <p>${data[currentIndex].name}</p>
-          <button class="audio-button" onclick="playAudio('${data[currentIndex].audioUrl}')">Play Audio</button>
-          `;
-        
-          document.getElementById('flashcardContent').innerHTML = flashcardContent;
-      } else {
-          document.getElementById('flashcardContent').innerHTML = '<p>No data available.</p>';
-      }
-}
+    function createLetterBox(lower, upper) {
+        const container = document.getElementById('lettersContainer');
 
-// Play audio pronunciation
-function playAudio(url) {
-    const audio = new Audio(url);
-    audio.play();
-}
+        const lowerDiv = document.createElement('div');
+        lowerDiv.classList.add('letter');
+        lowerDiv.innerText = lower;
+        lowerDiv.onclick = () => checkMatch(lower, upper, lowerDiv);
 
-// Navigation functions
-function prevImage() {
-    if (currentIndex > 0) currentIndex--;
-    displayFlashcard();
-}
+        const upperDiv = document.createElement('div');
+        upperDiv.classList.add('letter');
+        upperDiv.innerText = upper;
+        upperDiv.onclick = () => checkMatch(upper, lower, upperDiv);
 
-function nextImage() {
-    const data = flashcardData[currentCategory];
-    if (data && currentIndex < data.length - 1) currentIndex++;
-    displayFlashcard();
-}
+        container.appendChild(lowerDiv);
+        container.appendChild(upperDiv);
+    }
 
-// Matching Game Logic
-const alphabets = "abcdefghijklmnopqrstuvwxyz";
-const upperAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-let score = 0;
+    function checkMatch(selected, target, letterDiv) {
+        if (selected.toLowerCase() === target.toLowerCase()) {
+            matches++;
+            letterDiv.style.borderColor = 'green';
+            letterDiv.innerHTML += ' ★';
+        } else {
+            letterDiv.style.borderColor = 'red';
+            letterDiv.innerHTML += ' ★';
+        }
+        letterDiv.onclick = null;
 
-function startMatchingGame() {
-    const randomLowerCase = alphabets.split('').sort(() => Math.random() - Math.random()).slice(0, 5);
-    const randomUpperCase = upperAlphabets.split('').sort(() => Math.random() - Math.random()).slice(0, 5);
-    
-    let gameHtml = '';
-    
-    randomLowerCase.forEach((lower, index) => {
-      gameHtml += `
-      <div style="display:inline-block; margin-right:10px;">
-          <span>${lower}</span> - 
-          <input type="text" id="${lower}" placeholder="${upperAlphabets[index]}"/>
-      </div>`;
-   });
-    
-   document.getElementById('matchingGame').innerHTML = gameHtml + `<button onclick="checkAnswers(${randomUpperCase.join(',')})">Check Answers</button>`;
-}
+        if (matches === totalMatches) {
+            endGame();
+        }
+    }
 
-function checkAnswers(correctAnswers) {
-   score = 0;
-
-   correctAnswers.forEach((upper, index) => {
-      const userAnswer = document.getElementById(alphabets[index]).value.toUpperCase();
-      if (userAnswer === upper) {
-          score++;
-          alert("Correct! ⭐");
-      } else {
-          alert("Wrong! ❌");
-      }
-   });
-
-   if (score > 5) {
-       alert("Congratulations! You scored more than five green stars! 🎉");
-   } else {
-       alert("Try again!");
-       startMatchingGame();
-   }
-}
-
-// Start the game when the Games tab is clicked
-document.querySelector('.tab:nth-child(2)').onclick = function() { startMatchingGame(); };
-
+    function endGame() {
+        document.getElementById('message').classList.remove('hidden');
+        if (matches > 5) {
+            document.getElementById('message').innerText = 'Congratulations! You matched more than 5!';
+        } else {
+            document.getElementById('message').innerText = 'Game over! Try again!';
+        }
+    }
 </script>
 
 </body>
