@@ -264,7 +264,7 @@
             if (isMatch) {
                 greenStars++;
                 matchedPairs.push(selectedLowercase + selectedUppercase);
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #00FF00;">★</span>'; // Green star for correct match
                 hideMatchedLetters(selectedLowercase, selectedUppercase);
 
                 // Show congratulations message if more than 5 stars
@@ -272,7 +272,7 @@
                     document.getElementById('congrats').style.display = 'block';
                 }
             } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">★</span>'; // Red star for incorrect match
             }
             resetSelections(); // Reset selections after checking
         }
