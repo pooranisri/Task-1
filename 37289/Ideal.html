@@ -8,206 +8,211 @@
         body {
             font-family: Arial, sans-serif;
             background-color: #f0f8ff;
-            color: #333;
             margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #ffcc00;
-            text-align: center;
             padding: 20px;
-            font-size: 24px;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        nav {
+        h1 {
+            text-align: center;
+            color: #ff6347; /* Tomato */
+        }
+        #tabs {
             display: flex;
             justify-content: center;
-            background-color: #ffcc00;
+            margin-bottom: 20px;
         }
-        nav button {
-            background-color: #ffcc00;
-            border: none;
-            padding: 15px;
+        .tab {
+            padding: 10px 20px;
             margin: 0 5px;
+            background-color: #87cefa; /* LightSkyBlue */
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 18px;
-            transition: background-color 0.3s;
         }
-        nav button:hover {
-            background-color: #ffd700;
+        .tab:hover {
+            background-color: #00bfff; /* DeepSkyBlue */
         }
         .content {
-            padding: 20px;
             display: none;
+            text-align: center;
         }
         .active {
             display: block;
         }
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .category {
             margin-top: 20px;
         }
-        .match {
-            display: flex;
-            justify-content: center;
+        img {
+            width: 100px;
+            height: auto;
             margin: 10px;
+            transition: transform 0.2s; /* Animation */
         }
-        .match div {
-            width: 50px;
-            height: 50px;
-            margin: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            border: 2px solid #333;
+        img:hover {
+            transform: scale(1.1);
+        }
+        .audio-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #32cd32; /* LimeGreen */
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
-        .match div:hover {
-            background-color: #e0e0e0;
+        .audio-button:hover {
+            background-color: #228b22; /* ForestGreen */
+        }
+        .navigation {
+            margin-top: 20px;
         }
         .star {
-            font-size: 40px;
-            display: none;
-            margin: 5px;
-        }
-        .congratulations {
-            display: none;
-            font-size: 24px;
-            color: green;
-            margin-top: 20px;
+            font-size: 30px;
         }
     </style>
 </head>
 <body>
 
-<header>Kids Learning App</header>
+<h1>Kids Learning App</h1>
 
-<nav>
-    <button onclick="showTab('flashcards')">Flashcards</button>
-    <button onclick="showTab('game')">Game</button>
-</nav>
+<div id="tabs">
+    <div class="tab" onclick="showTab('flashcards')">Flashcards</div>
+    <div class="tab" onclick="showTab('games')">Games</div>
+</div>
 
 <div id="flashcards" class="content active">
-    <h2>Select a Category</h2>
+    <h2>Choose a Category</h2>
     <div class="category">
-        <img src="https://via.placeholder.com/100/ff0000/ffffff?text=Fruits" alt="Fruits" onclick="showFlashcard('fruits')">
-        <img src="https://via.placeholder.com/100/00ff00/ffffff?text=Vegetables" alt="Vegetables" onclick="showFlashcard('vegetables')">
-        <img src="https://via.placeholder.com/100/0000ff/ffffff?text=Colors" alt="Colors" onclick="showFlashcard('colors')">
-        <img src="https://via.placeholder.com/100/ffff00/000000?text=Vehicles" alt="Vehicles" onclick="showFlashcard('vehicles')">
+        <button onclick="loadCategory('fruits')">Fruits</button>
+        <button onclick="loadCategory('vegetables')">Vegetables</button>
+        <button onclick="loadCategory('colors')">Colors</button>
+        <button onclick="loadCategory('vehicles')">Vehicles</button>
     </div>
-    <div id="flashcardContent" class="flashcard">
-        <img id="flashcardImage" src="" alt="">
-        <div class="buttons">
-            <button onclick="playAudio()">Play Sound</button>
-            <button onclick="prevImage()">Prev</button>
-            <button onclick="nextImage()">Next</button>
-        </div>
+    <div id="flashcardContent"></div>
+    <div class="navigation">
+        <button onclick="prevImage()">Prev</button>
+        <button onclick="nextImage()">Next</button>
     </div>
 </div>
 
-<div id="game" class="content">
+<div id="games" class="content">
     <h2>Matching Game</h2>
-    <div class="game-container">
-        <div class="match" id="uppercaseContainer"></div>
-        <div class="match" id="lowercaseContainer"></div>
-        <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
-        <div>
-            <button onclick="nextGame()">Next Game</button>
-            <button onclick="backToMain()">Back</button>
-        </div>
-    </div>
+    <div id="matchingGame"></div>
 </div>
 
 <script>
-    let matchCount = 0;
-    const totalMatchesNeeded = 5;
+// Flashcard Data
+const flashcardData = {
+    fruits: [
+        { name: 'Apple', imageUrl: 'https://via.placeholder.com/100?text=Apple', audioUrl: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
+        { name: 'Banana', imageUrl: 'https://via.placeholder.com/100?text=Banana', audioUrl: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
+    ],
+    vegetables: [
+        { name: 'Carrot', imageUrl: 'https://via.placeholder.com/100?text=Carrot', audioUrl: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
+    ],
+    colors: [
+        { name: 'Red', imageUrl: 'https://via.placeholder.com/100/ff0000/ffffff?text=Red', audioUrl: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
+    ],
+    vehicles: [
+        { name: 'Car', imageUrl: 'https://via.placeholder.com/100?text=Car', audioUrl: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
+    ]
+};
 
-    function showTab(tab) {
-        document.querySelectorAll('.content').forEach(div => div.classList.remove('active'));
-        document.getElementById(tab).classList.add('active');
-        if (tab === 'flashcards') {
-            resetFlashcard();
-        } else if (tab === 'game') {
-            startGame();
-        }
-    }
+let currentCategory = '';
+let currentIndex = 0;
 
-    function startGame() {
-        const upperCaseLetters = ['A', 'B', 'C', 'D', 'E'];
-        const lowerCaseLetters = ['a', 'b', 'c', 'd', 'e'];
-        const uppercaseContainer = document.getElementById('uppercaseContainer');
-        const lowercaseContainer = document.getElementById('lowercaseContainer');
-        uppercaseContainer.innerHTML = '';
-        lowercaseContainer.innerHTML = '';
-        matchCount = 0;
+// Show selected tab
+function showTab(tab) {
+    document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+    document.getElementById(tab).classList.add('active');
+}
 
-        // Shuffle and display limited letters
-        upperCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
-            const div = createLetterDiv(letter, true);
-            uppercaseContainer.appendChild(div);
-        });
+// Load selected category
+function loadCategory(category) {
+    currentCategory = category;
+    currentIndex = 0; // Reset index
+    displayFlashcard();
+}
 
-        lowerCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
-            const div = createLetterDiv(letter, false);
-            lowercaseContainer.appendChild(div);
-        });
-    }
+// Display flashcard
+function displayFlashcard() {
+    const data = flashcardData[currentCategory];
+    
+    if (data && data.length > 0) {
+        const flashcardContent = `
+          <img src="${data[currentIndex].imageUrl}" alt="${data[currentIndex].name}">
+          <p>${data[currentIndex].name}</p>
+          <button class="audio-button" onclick="playAudio('${data[currentIndex].audioUrl}')">Play Audio</button>
+          `;
+        
+          document.getElementById('flashcardContent').innerHTML = flashcardContent;
+      } else {
+          document.getElementById('flashcardContent').innerHTML = '<p>No data available.</p>';
+      }
+}
 
-    function createLetterDiv(letter, isUpper) {
-        const div = document.createElement('div');
-        div.textContent = letter;
-        div.addEventListener('click', () => checkMatch(letter, isUpper));
-        return div;
-    }
+// Play audio pronunciation
+function playAudio(url) {
+    const audio = new Audio(url);
+    audio.play();
+}
 
-    function checkMatch(letter, isUpper) {
-        const targetLetter = isUpper ? letter.toLowerCase() : letter.toUpperCase();
-        const existingPair = document.querySelector(`#lowercaseContainer div:contains(${targetLetter})`) || 
-                             document.querySelector(`#uppercaseContainer div:contains(${letter})`);
+// Navigation functions
+function prevImage() {
+    if (currentIndex > 0) currentIndex--;
+    displayFlashcard();
+}
 
-        if (existingPair) {
-            matchCount++;
-            displayStar(true);
-            existingPair.style.display = 'none';
-            document.querySelector(`#uppercaseContainer div:contains(${letter})`).style.display = 'none';
-            if (matchCount > totalMatchesNeeded) {
-                document.getElementById('congratulationsMessage').style.display = 'block';
-            }
-        } else {
-            displayStar(false);
-        }
-    }
+function nextImage() {
+    const data = flashcardData[currentCategory];
+    if (data && currentIndex < data.length - 1) currentIndex++;
+    displayFlashcard();
+}
 
-    function displayStar(correct) {
-        const star = document.createElement('div');
-        star.className = 'star';
-        star.textContent = correct ? '⭐' : '❌';
-        star.style.color = correct ? 'green' : 'red';
-        document.querySelector('.game-container').appendChild(star);
-        star.style.display = 'block';
-        setTimeout(() => star.style.display = 'none', 1000);
-    }
+// Matching Game Logic
+const alphabets = "abcdefghijklmnopqrstuvwxyz";
+const upperAlphabets = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+let score = 0;
 
-    function nextGame() {
-        // Logic to load the next game could be added here
-        alert('Next game functionality is not yet implemented!');
-    }
+function startMatchingGame() {
+    const randomLowerCase = alphabets.split('').sort(() => Math.random() - Math.random()).slice(0, 5);
+    const randomUpperCase = upperAlphabets.split('').sort(() => Math.random() - Math.random()).slice(0, 5);
+    
+    let gameHtml = '';
+    
+    randomLowerCase.forEach((lower, index) => {
+      gameHtml += `
+      <div style="display:inline-block; margin-right:10px;">
+          <span>${lower}</span> - 
+          <input type="text" id="${lower}" placeholder="${upperAlphabets[index]}"/>
+      </div>`;
+   });
+    
+   document.getElementById('matchingGame').innerHTML = gameHtml + `<button onclick="checkAnswers(${randomUpperCase.join(',')})">Check Answers</button>`;
+}
 
-    function backToMain() {
-        showTab('flashcards');
-    }
+function checkAnswers(correctAnswers) {
+   score = 0;
 
-    function resetFlashcard() {
-        document.getElementById('flashcardContent').style.display = 'none';
-    }
+   correctAnswers.forEach((upper, index) => {
+      const userAnswer = document.getElementById(alphabets[index]).value.toUpperCase();
+      if (userAnswer === upper) {
+          score++;
+          alert("Correct! ⭐");
+      } else {
+          alert("Wrong! ❌");
+      }
+   });
 
-    // Initialize the app
-    showTab('flashcards');
+   if (score > 5) {
+       alert("Congratulations! You scored more than five green stars! 🎉");
+   } else {
+       alert("Try again!");
+       startMatchingGame();
+   }
+}
+
+// Start the game when the Games tab is clicked
+document.querySelector('.tab:nth-child(2)').onclick = function() { startMatchingGame(); };
+
 </script>
 
 </body>
