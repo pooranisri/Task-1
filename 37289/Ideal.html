@@ -93,6 +93,20 @@
         .game-row {
             margin: 20px 0;
         }
+        .next-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: none; /* Hidden initially */
+        }
+        .next-button:hover {
+            background-color: #1976d2;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +130,7 @@
         <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
+        <button id="next-button" class="next-button" onclick="startGame()">Next</button>
     </div>
 </div>
 
@@ -143,6 +158,7 @@
     let categories = mockData;
     let currentCategory = '';
     let currentIndex = 0;
+    let greenStars = 0;
 
     function displayCategories() {
         const categoriesDiv = document.getElementById('categories');
@@ -197,8 +213,6 @@
         displayFlashcard();
     }
 
-    let greenStars = 0;
-
     function startGame() {
         const letters = generateRandomLetters();
         document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => 
@@ -209,6 +223,7 @@
         ).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
+        document.getElementById('next-button').style.display = 'none'; // Hide next button initially
     }
 
     function generateRandomLetters() {
@@ -239,6 +254,9 @@
 
         if (!matchFound) {
             document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
+            document.getElementById('next-button').style.display = 'block'; // Show next button on incorrect match
+        } else {
+            document.getElementById('next-button').style.display = 'none'; // Hide next button on correct match
         }
 
         if (greenStars > 5) {
