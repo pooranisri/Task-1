@@ -93,19 +93,27 @@
         .game-row {
             margin: 20px 0;
         }
-        .next-button {
+        .next-button, .back-button {
             margin-top: 20px;
             padding: 10px 20px;
-            background-color: #2196f3;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            display: block; /* Always show next button */
+        }
+        .next-button {
+            background-color: #2196f3;
+        }
+        .back-button {
+            background-color: #ff5722;
+            margin-left: 10px;
         }
         .next-button:hover {
             background-color: #1976d2;
+        }
+        .back-button:hover {
+            background-color: #e64a19;
         }
     </style>
 </head>
@@ -130,7 +138,8 @@
         <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <button id="next-button" class="next-button" onclick="nextStep()">Next</button>
+        <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
+        <button class="back-button" onclick="showTab('flashcards')">Back</button>
     </div>
 </div>
 
@@ -250,8 +259,9 @@
                 matchFound = true;
                 greenStars++;
                 document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
-                otherLetter.style.backgroundColor = '#c8e6c9'; // Change color for correct match
-                otherLetter.style.pointerEvents = 'none'; // Disable further clicks
+                otherLetter.style.display = 'none'; // Hide matched letter
+                const matchedLetterDiv = document.querySelector(`#${type} .letter:contains("${letter}")`);
+                if (matchedLetterDiv) matchedLetterDiv.style.display = 'none'; // Hide matched letter
             }
         });
 
@@ -267,10 +277,11 @@
 
     function nextStep() {
         if (greenStars > 5) {
-            alert('Congratulations! You got more than 5 stars!');
+            document.getElementById('congrats').style.display = 'block';
         } else {
             showTab('flashcards'); // Return to the Flashcards tab
         }
+        startGame(); // Start the next game set
     }
 
     window.onload = () => {
