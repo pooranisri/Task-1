@@ -7,13 +7,13 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f8ff;
+            background-color: #e0f7fa;
             margin: 0;
             padding: 0;
         }
         h1 {
             text-align: center;
-            color: #ff6347;
+            color: #ff5722;
         }
         .tabs {
             display: flex;
@@ -21,23 +21,26 @@
             margin: 20px 0;
         }
         .tab {
-            padding: 10px 20px;
+            padding: 15px 25px;
             background-color: #ffeb3b;
             margin: 0 5px;
             cursor: pointer;
             border-radius: 5px;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, transform 0.2s;
         }
         .tab:hover {
             background-color: #ffd600;
+            transform: scale(1.05);
         }
         .content {
             display: none;
             text-align: center;
             padding: 20px;
-            border: 2px solid #ff6347;
+            border: 2px solid #ff5722;
             border-radius: 5px;
             background-color: #ffffff;
+            margin: 0 auto;
+            max-width: 600px;
         }
         .flashcard img {
             width: 150px;
@@ -47,7 +50,7 @@
         .flashcard button {
             margin: 10px;
             padding: 10px 20px;
-            background-color: #28a745;
+            background-color: #4caf50;
             color: white;
             border: none;
             border-radius: 5px;
@@ -55,7 +58,7 @@
             transition: background-color 0.3s;
         }
         .flashcard button:hover {
-            background-color: #218838;
+            background-color: #388e3c;
         }
         .game {
             display: flex;
@@ -68,19 +71,20 @@
         .result {
             margin-top: 20px;
             font-size: 24px;
-            color: #007bff;
+            color: #2196f3;
         }
         .btn-match {
             margin: 10px;
             padding: 10px 20px;
-            background-color: #007bff;
+            background-color: #2196f3;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         .btn-match:hover {
-            background-color: #0056b3;
+            background-color: #1976d2;
         }
         #congrats {
             display: none;
@@ -89,6 +93,9 @@
             display: inline-block;
             margin: 10px;
             font-size: 30px;
+            padding: 10px;
+            border: 2px dashed #ff5722;
+            border-radius: 5px;
         }
         .game-row {
             display: flex;
@@ -114,10 +121,7 @@
 <div id="game" class="content">
     <h2>Matching Game</h2>
     <div class="game" id="game-content">
-        <div class="game-row">
-            <div id="lowercase" class="letters"></div>
-            <div id="uppercase" class="letters"></div>
-        </div>
+        <div class="game-row" id="letter-pairs"></div>
         <button class="btn-match" onclick="checkMatch()">Check Match</button>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
@@ -153,7 +157,7 @@
         const categoriesDiv = document.getElementById('categories');
         categoriesDiv.innerHTML = ''; // Clear previous categories
         for (const category in categories) {
-            categoriesDiv.innerHTML += `<button onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
+            categoriesDiv.innerHTML += `<button class="btn-match" onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
         }
     }
 
@@ -204,8 +208,13 @@
 
     function startGame() {
         const letters = generateRandomLetters();
-        document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => `<div class="letter">${letter}</div>`).join('');
-        document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => `<div class="letter">${letter}</div>`).join('');
+        document.getElementById('letter-pairs').innerHTML = '';
+        letters.lowercase.forEach(letter => {
+            document.getElementById('letter-pairs').innerHTML += `<div class="letter">${letter}</div>`;
+        });
+        letters.uppercase.forEach(letter => {
+            document.getElementById('letter-pairs').innerHTML += `<div class="letter">${letter}</div>`;
+        });
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
     }
@@ -222,25 +231,20 @@
     }
 
     function checkMatch() {
-        const lowerLetters = document.querySelectorAll('#lowercase .letter');
-        const upperLetters = document.querySelectorAll('#uppercase .letter');
-        let isMatch = true;
+        const lowerLetters = document.querySelectorAll('#letter-pairs .letter:nth-child(-n+1)');
+        const upperLetters = document.querySelectorAll('#letter-pairs .letter:nth-child(n+1)');
 
         lowerLetters.forEach((lower, index) => {
             const lowerChar = lower.textContent;
             const upperChar = upperLetters[index].textContent;
 
-            if (upperChar.toLowerCase() !== lowerChar) {
-                isMatch = false;
+            if (upperChar.toLowerCase() === lowerChar) {
+                greenStars++;
+                document.getElementById('stars').innerHTML += '<span class="star">⭐</span>';
+            } else {
+                document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
             }
         });
-
-        if (isMatch) {
-            greenStars++;
-            document.getElementById('stars').innerHTML += '<span class="star">⭐</span>';
-        } else {
-            document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
-        }
 
         if (greenStars > 5) {
             document.getElementById('congrats').style.display = 'block';
