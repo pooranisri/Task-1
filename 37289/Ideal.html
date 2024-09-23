@@ -108,10 +108,10 @@
 <div id="flashcards" class="content active">
     <h2>Flashcards</h2>
     <div class="category" id="category">
-        <div onclick="showCategory('fruits')"><img src="https://via.placeholder.com/100?text=Fruits" alt="Fruits">Fruits</div>
-        <div onclick="showCategory('vegetables')"><img src="https://via.placeholder.com/100?text=Vegetables" alt="Vegetables">Vegetables</div>
-        <div onclick="showCategory('colors')"><img src="https://via.placeholder.com/100?text=Colors" alt="Colors">Colors</div>
-        <div onclick="showCategory('vehicles')"><img src="https://via.placeholder.com/100?text=Vehicles" alt="Vehicles">Vehicles</div>
+        <div onclick="showCategory('fruits')"><img src="https://example.com/fruits.png" alt="Fruits">Fruits</div>
+        <div onclick="showCategory('vegetables')"><img src="https://example.com/vegetables.png" alt="Vegetables">Vegetables</div>
+        <div onclick="showCategory('colors')"><img src="https://example.com/colors.png" alt="Colors">Colors</div>
+        <div onclick="showCategory('vehicles')"><img src="https://example.com/vehicles.png" alt="Vehicles">Vehicles</div>
     </div>
     <div id="flashcard" class="flashcard"></div>
     <button onclick="prevImage()">Prev</button>
@@ -127,52 +127,52 @@
 <script>
     const flashcards = {
         fruits: [
-            { name: 'Apple', img: 'https://via.placeholder.com/100?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Banana', img: 'https://via.placeholder.com/100?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-            { name: 'Cherry', img: 'https://via.placeholder.com/100?text=Cherry', audio: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-            { name: 'Grape', img: 'https://via.placeholder.com/100?text=Grape', audio: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
-            { name: 'Lemon', img: 'https://via.placeholder.com/100?text=Lemon', audio: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
-            { name: 'Mango', img: 'https://via.placeholder.com/100?text=Mango', audio: 'https://www.soundjay.com/button/sounds/button-8.mp3' },
-            { name: 'Orange', img: 'https://via.placeholder.com/100?text=Orange', audio: 'https://www.soundjay.com/button/sounds/button-9.mp3' },
-            { name: 'Peach', img: 'https://via.placeholder.com/100?text=Peach', audio: 'https://www.soundjay.com/button/sounds/button-10.mp3' },
-            { name: 'Pear', img: 'https://via.placeholder.com/100?text=Pear', audio: 'https://www.soundjay.com/button/sounds/button-11.mp3' },
-            { name: 'Strawberry', img: 'https://via.placeholder.com/100?text=Strawberry', audio: 'https://www.soundjay.com/button/sounds/button-12.mp3' },
+            { name: 'Apple', img: 'https://example.com/apple.png', audio: 'https://example.com/apple.mp3' },
+            { name: 'Banana', img: 'https://example.com/banana.png', audio: 'https://example.com/banana.mp3' },
+            { name: 'Cherry', img: 'https://example.com/cherry.png', audio: 'https://example.com/cherry.mp3' },
+            { name: 'Grape', img: 'https://example.com/grape.png', audio: 'https://example.com/grape.mp3' },
+            { name: 'Lemon', img: 'https://example.com/lemon.png', audio: 'https://example.com/lemon.mp3' },
+            { name: 'Mango', img: 'https://example.com/mango.png', audio: 'https://example.com/mango.mp3' },
+            { name: 'Orange', img: 'https://example.com/orange.png', audio: 'https://example.com/orange.mp3' },
+            { name: 'Peach', img: 'https://example.com/peach.png', audio: 'https://example.com/peach.mp3' },
+            { name: 'Pear', img: 'https://example.com/pear.png', audio: 'https://example.com/pear.mp3' },
+            { name: 'Strawberry', img: 'https://example.com/strawberry.png', audio: 'https://example.com/strawberry.mp3' },
         ],
         vegetables: [
-            { name: 'Carrot', img: 'https://via.placeholder.com/100?text=Carrot', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Tomato', img: 'https://via.placeholder.com/100?text=Tomato', audio: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-            { name: 'Potato', img: 'https://via.placeholder.com/100?text=Potato', audio: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-            { name: 'Cucumber', img: 'https://via.placeholder.com/100?text=Cucumber', audio: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
-            { name: 'Onion', img: 'https://via.placeholder.com/100?text=Onion', audio: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
-            { name: 'Broccoli', img: 'https://via.placeholder.com/100?text=Broccoli', audio: 'https://www.soundjay.com/button/sounds/button-8.mp3' },
-            { name: 'Spinach', img: 'https://via.placeholder.com/100?text=Spinach', audio: 'https://www.soundjay.com/button/sounds/button-9.mp3' },
-            { name: 'Pepper', img: 'https://via.placeholder.com/100?text=Pepper', audio: 'https://www.soundjay.com/button/sounds/button-10.mp3' },
-            { name: 'Corn', img: 'https://via.placeholder.com/100?text=Corn', audio: 'https://www.soundjay.com/button/sounds/button-11.mp3' },
-            { name: 'Zucchini', img: 'https://via.placeholder.com/100?text=Zucchini', audio: 'https://www.soundjay.com/button/sounds/button-12.mp3' },
+            { name: 'Carrot', img: 'https://example.com/carrot.png', audio: 'https://example.com/carrot.mp3' },
+            { name: 'Tomato', img: 'https://example.com/tomato.png', audio: 'https://example.com/tomato.mp3' },
+            { name: 'Potato', img: 'https://example.com/potato.png', audio: 'https://example.com/potato.mp3' },
+            { name: 'Cucumber', img: 'https://example.com/cucumber.png', audio: 'https://example.com/cucumber.mp3' },
+            { name: 'Onion', img: 'https://example.com/onion.png', audio: 'https://example.com/onion.mp3' },
+            { name: 'Broccoli', img: 'https://example.com/broccoli.png', audio: 'https://example.com/broccoli.mp3' },
+            { name: 'Spinach', img: 'https://example.com/spinach.png', audio: 'https://example.com/spinach.mp3' },
+            { name: 'Pepper', img: 'https://example.com/pepper.png', audio: 'https://example.com/pepper.mp3' },
+            { name: 'Corn', img: 'https://example.com/corn.png', audio: 'https://example.com/corn.mp3' },
+            { name: 'Zucchini', img: 'https://example.com/zucchini.png', audio: 'https://example.com/zucchini.mp3' },
         ],
         colors: [
-            { name: 'Red', img: 'https://via.placeholder.com/100/ff0000/ffffff?text=Red', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Green', img: 'https://via.placeholder.com/100/00ff00/ffffff?text=Green', audio: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-            { name: 'Blue', img: 'https://via.placeholder.com/100/0000ff/ffffff?text=Blue', audio: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-            { name: 'Yellow', img: 'https://via.placeholder.com/100/ffff00/000000?text=Yellow', audio: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
-            { name: 'Orange', img: 'https://via.placeholder.com/100/ffa500/ffffff?text=Orange', audio: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
-            { name: 'Purple', img: 'https://via.placeholder.com/100/800080/ffffff?text=Purple', audio: 'https://www.soundjay.com/button/sounds/button-8.mp3' },
-            { name: 'Pink', img: 'https://via.placeholder.com/100/ffc0cb/000000?text=Pink', audio: 'https://www.soundjay.com/button/sounds/button-9.mp3' },
-            { name: 'Brown', img: 'https://via.placeholder.com/100/a52a2a/ffffff?text=Brown', audio: 'https://www.soundjay.com/button/sounds/button-10.mp3' },
-            { name: 'Black', img: 'https://via.placeholder.com/100/000000/ffffff?text=Black', audio: 'https://www.soundjay.com/button/sounds/button-11.mp3' },
-            { name: 'White', img: 'https://via.placeholder.com/100/ffffff/000000?text=White', audio: 'https://www.soundjay.com/button/sounds/button-12.mp3' },
+            { name: 'Red', img: 'https://example.com/red.png', audio: 'https://example.com/red.mp3' },
+            { name: 'Green', img: 'https://example.com/green.png', audio: 'https://example.com/green.mp3' },
+            { name: 'Blue', img: 'https://example.com/blue.png', audio: 'https://example.com/blue.mp3' },
+            { name: 'Yellow', img: 'https://example.com/yellow.png', audio: 'https://example.com/yellow.mp3' },
+            { name: 'Orange', img: 'https://example.com/orange.png', audio: 'https://example.com/orange.mp3' },
+            { name: 'Purple', img: 'https://example.com/purple.png', audio: 'https://example.com/purple.mp3' },
+            { name: 'Pink', img: 'https://example.com/pink.png', audio: 'https://example.com/pink.mp3' },
+            { name: 'Brown', img: 'https://example.com/brown.png', audio: 'https://example.com/brown.mp3' },
+            { name: 'Black', img: 'https://example.com/black.png', audio: 'https://example.com/black.mp3' },
+            { name: 'White', img: 'https://example.com/white.png', audio: 'https://example.com/white.mp3' },
         ],
         vehicles: [
-            { name: 'Car', img: 'https://via.placeholder.com/100?text=Car', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Bicycle', img: 'https://via.placeholder.com/100?text=Bicycle', audio: 'https://www.soundjay.com/button/sounds/button-4.mp3' },
-            { name: 'Bus', img: 'https://via.placeholder.com/100?text=Bus', audio: 'https://www.soundjay.com/button/sounds/button-5.mp3' },
-            { name: 'Train', img: 'https://via.placeholder.com/100?text=Train', audio: 'https://www.soundjay.com/button/sounds/button-6.mp3' },
-            { name: 'Airplane', img: 'https://via.placeholder.com/100?text=Airplane', audio: 'https://www.soundjay.com/button/sounds/button-7.mp3' },
-            { name: 'Boat', img: 'https://via.placeholder.com/100?text=Boat', audio: 'https://www.soundjay.com/button/sounds/button-8.mp3' },
-            { name: 'Truck', img: 'https://via.placeholder.com/100?text=Truck', audio: 'https://www.soundjay.com/button/sounds/button-9.mp3' },
-            { name: 'Scooter', img: 'https://via.placeholder.com/100?text=Scooter', audio: 'https://www.soundjay.com/button/sounds/button-10.mp3' },
-            { name: 'Helicopter', img: 'https://via.placeholder.com/100?text=Helicopter', audio: 'https://www.soundjay.com/button/sounds/button-11.mp3' },
-            { name: 'Motorcycle', img: 'https://via.placeholder.com/100?text=Motorcycle', audio: 'https://www.soundjay.com/button/sounds/button-12.mp3' },
+            { name: 'Car', img: 'https://example.com/car.png', audio: 'https://example.com/car.mp3' },
+            { name: 'Bicycle', img: 'https://example.com/bicycle.png', audio: 'https://example.com/bicycle.mp3' },
+            { name: 'Bus', img: 'https://example.com/bus.png', audio: 'https://example.com/bus.mp3' },
+            { name: 'Train', img: 'https://example.com/train.png', audio: 'https://example.com/train.mp3' },
+            { name: 'Airplane', img: 'https://example.com/airplane.png', audio: 'https://example.com/airplane.mp3' },
+            { name: 'Boat', img: 'https://example.com/boat.png', audio: 'https://example.com/boat.mp3' },
+            { name: 'Truck', img: 'https://example.com/truck.png', audio: 'https://example.com/truck.mp3' },
+            { name: 'Scooter', img: 'https://example.com/scooter.png', audio: 'https://example.com/scooter.mp3' },
+            { name: 'Helicopter', img: 'https://example.com/helicopter.png', audio: 'https://example.com/helicopter.mp3' },
+            { name: 'Motorcycle', img: 'https://example.com/motorcycle.png', audio: 'https://example.com/motorcycle.mp3' },
         ],
     };
 
@@ -259,20 +259,21 @@
 
     function checkMatch(selected, counterpart, element) {
         if (selected === counterpart) {
-            stars++;
             element.style.backgroundColor = '#c8e6c9'; // Green
             document.querySelector('.result').innerHTML += '<span class="star">⭐</span>';
+            // Disable further clicks on the matched item
+            element.onclick = null;
         } else {
             element.style.backgroundColor = '#ffcdd2'; // Red
         }
-        if (document.querySelectorAll('.star').length === stars) {
+        if (document.querySelectorAll('.star').length === 10) {
             endGame();
         }
     }
 
     function endGame() {
         const resultContainer = document.querySelector('.result');
-        if (stars > 5) {
+        if (document.querySelectorAll('.star').length > 5) {
             resultContainer.innerHTML = "Congratulations! You matched more than 5 pairs!";
         } else {
             resultContainer.innerHTML = "Try again! Keep practicing!";
