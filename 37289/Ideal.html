@@ -68,6 +68,19 @@
             align-items: center;
             flex-direction: column;
         }
+        .letter {
+            font-size: 24px;
+            margin: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border: 2px solid #ccc;
+            display: inline-block;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .letter:hover {
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -92,11 +105,9 @@
 
     <div id="games" class="tab">
         <h2>Matching Game</h2>
-        <div class="game">
-            <div id="game-content"></div>
-            <button class="button" onclick="startGame()">Start Game</button>
-            <div class="star" id="result"></div>
-        </div>
+        <div class="game" id="game-content"></div>
+        <button class="button" onclick="startGame()">Start Game</button>
+        <div class="star" id="result"></div>
         <button class="button" onclick="showTab('flashcards')">Back to Flashcards</button>
     </div>
 
@@ -195,29 +206,55 @@
         }
 
         let greenStars = 0;
+        let firstSelection = null;
 
         function startGame() {
             greenStars = 0;
+            firstSelection = null;
             const gameContent = document.getElementById('game-content');
             gameContent.innerHTML = '';
+
+            // Generate pairs of letters
+            const letters = [];
             for (let i = 0; i < 10; i++) {
                 const upper = String.fromCharCode(65 + Math.floor(Math.random() * 26));
                 const lower = String.fromCharCode(97 + Math.floor(Math.random() * 26));
-                gameContent.innerHTML += `
-                    <div>
-                        <span>${lower}</span> <span>${upper}</span>
-                        <button onclick="checkMatch('${lower}', '${upper}')">Match</button>
-                        <span class="star" id="star-${i}"></span>
-                    </div>
-                `;
+                letters.push(lower, upper);
+            }
+
+            // Shuffle the letters
+            letters.sort(() => Math.random() - 0.5);
+
+            // Display the letters
+            letters.forEach(letter => {
+                const letterElement = document.createElement('span');
+                letterElement.textContent = letter;
+                letterElement.className = 'letter';
+                letterElement.onclick = () => selectLetter(letterElement);
+                gameContent.appendChild(letterElement);
+            });
+        }
+
+        function selectLetter(letterElement) {
+            if (firstSelection) {
+                // Check for match
+                if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
+                    letterElement.style.backgroundColor = '#90ee90'; // Light Green
+                    firstSelection.style.backgroundColor = '#90ee90'; // Light Green
+                    greenStars++;
+                    displayStar();
+                } else {
+                    letterElement.style.backgroundColor = '#ffcccb'; // Light Red
+                    firstSelection.style.backgroundColor = '#ffcccb'; // Light Red
+                }
+                firstSelection = null; // Reset selection
+            } else {
+                // Select the first letter
+                firstSelection = letterElement;
             }
         }
 
-        function checkMatch(lower, upper) {
-            const isMatch = lower.toUpperCase() === upper;
-            const starId = document.getElementById(`star-${greenStars}`);
-            starId.innerText = isMatch ? '⭐' : '❌';
-            if (isMatch) greenStars++;
+        function displayStar() {
             if (greenStars > 5) {
                 alert('Congratulations! You matched more than 5 letters!');
             }
