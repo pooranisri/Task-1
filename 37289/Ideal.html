@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kids Learning App</title>
+    <title>Kids Learning and Fun App</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -89,7 +89,7 @@
 </head>
 <body>
 
-    <h1>Kids Learning App</h1>
+    <h1>Kids Learning and Fun App</h1>
     
     <button class="button" onclick="showTab('flashcards')">Flashcards</button>
     <button class="button" onclick="showTab('games')">Games</button>
@@ -225,7 +225,6 @@
             document.getElementById('lowercase-container').innerHTML = '';
             document.getElementById('uppercase-container').innerHTML = '';
 
-            // Generate pairs of letters
             const letters = [];
             for (let i = 0; i < 13; i++) {
                 const lower = String.fromCharCode(97 + i);
@@ -236,7 +235,6 @@
             // Shuffle the letters
             letters.sort(() => Math.random() - 0.5);
 
-            // Display lowercase letters
             letters.forEach(letter => {
                 const letterElement = document.createElement('span');
                 letterElement.textContent = letter;
@@ -254,17 +252,16 @@
             if (firstSelection) {
                 // Check for match
                 if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
-                    letterElement.style.backgroundColor = '#00FF00'; // Light Green
-                    firstSelection.style.backgroundColor = '#00FF00'; // Light Green
+                    letterElement.style.backgroundColor = '#00FF00'; 
+                    firstSelection.style.backgroundColor = '#00FF00';
                     greenStars++;
                     displayStar();
                 } else {
-                    letterElement.style.backgroundColor = '#FF0000'; // Light Red
-                    firstSelection.style.backgroundColor = '#FF0000'; // Light Red
+                    letterElement.style.backgroundColor = '#FF0000';
+                    firstSelection.style.backgroundColor = '#FF0000';
                 }
-                firstSelection = null; // Reset selection
+                firstSelection = null;
             } else {
-                // Select the first letter
                 firstSelection = letterElement;
             }
         }
