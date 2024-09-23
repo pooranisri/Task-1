@@ -102,7 +102,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            display: none; /* Hidden initially */
+            display: block; /* Always show next button */
         }
         .next-button:hover {
             background-color: #1976d2;
@@ -223,7 +223,6 @@
         ).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
-        document.getElementById('next-button').style.display = 'none'; // Hide next button initially
     }
 
     function generateRandomLetters() {
@@ -231,9 +230,12 @@
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const randomLowercase = [lowercase[Math.floor(Math.random() * lowercase.length)]];
         const randomUppercase = [uppercase[Math.floor(Math.random() * uppercase.length)]];
+        
+        // Include more correct letters often
+        const correctLowercase = 'abcde'; // You can choose more letters as needed
         return {
-            lowercase: randomLowercase,
-            uppercase: randomUppercase,
+            lowercase: randomLowercase.concat(correctLowercase.split('').sort(() => Math.random() - 0.5)),
+            uppercase: randomUppercase.concat(correctLowercase.toUpperCase().split('').sort(() => Math.random() - 0.5)),
         };
     }
 
@@ -246,17 +248,14 @@
             if (otherLetter.textContent.toLowerCase() === letter) {
                 matchFound = true;
                 greenStars++;
-                document.getElementById('stars').innerHTML += '<span class="star">⭐</span>';
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
                 otherLetter.style.backgroundColor = '#c8e6c9'; // Change color for correct match
                 otherLetter.style.pointerEvents = 'none'; // Disable further clicks
             }
         });
 
         if (!matchFound) {
-            document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
-            document.getElementById('next-button').style.display = 'block'; // Show next button on incorrect match
-        } else {
-            document.getElementById('next-button').style.display = 'none'; // Hide next button on correct match
+            document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
         }
 
         if (greenStars > 5) {
