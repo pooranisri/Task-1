@@ -93,21 +93,23 @@
         .game-row {
             margin: 20px 0;
         }
-        .next-button, .back-button {
+        .button-container {
             margin-top: 20px;
+        }
+        .next-button, .back-button {
             padding: 10px 20px;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin: 0 10px; /* Space between buttons */
         }
         .next-button {
             background-color: #2196f3;
         }
         .back-button {
             background-color: #ff5722;
-            margin-right: 10px;
         }
         .next-button:hover {
             background-color: #1976d2;
@@ -138,8 +140,10 @@
         <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <button class="back-button" onclick="showTab('flashcards')">Back</button>
-        <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
+        <div class="button-container">
+            <button class="back-button" onclick="showTab('flashcards')">Back</button>
+            <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
+        </div>
     </div>
 </div>
 
