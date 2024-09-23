@@ -73,22 +73,6 @@
             font-size: 24px;
             color: #2196f3;
         }
-        .btn-match {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #2196f3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn-match:hover {
-            background-color: #1976d2;
-        }
-        #congrats {
-            display: none;
-        }
         .letter {
             display: inline-block;
             margin: 10px;
@@ -96,11 +80,14 @@
             padding: 10px;
             border: 2px dashed #ff5722;
             border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
-        .game-row {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .letter:hover {
+            background-color: #ffe0b2;
+        }
+        #congrats {
+            display: none;
         }
     </style>
 </head>
@@ -121,8 +108,8 @@
 <div id="game" class="content">
     <h2>Matching Game</h2>
     <div class="game" id="game-content">
-        <div class="game-row" id="letter-pairs"></div>
-        <button class="btn-match" onclick="checkMatch()">Check Match</button>
+        <div id="lowercase" class="game-row"></div>
+        <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
     </div>
@@ -166,6 +153,8 @@
         document.getElementById(tab).style.display = 'block';
         if (tab === 'flashcards') {
             displayCategories(); // Show categories when Flashcards is opened
+        } else if (tab === 'game') {
+            startGame(); // Start the game when the Game tab is opened
         }
     }
 
@@ -208,13 +197,12 @@
 
     function startGame() {
         const letters = generateRandomLetters();
-        document.getElementById('letter-pairs').innerHTML = '';
-        letters.lowercase.forEach(letter => {
-            document.getElementById('letter-pairs').innerHTML += `<div class="letter">${letter}</div>`;
-        });
-        letters.uppercase.forEach(letter => {
-            document.getElementById('letter-pairs').innerHTML += `<div class="letter">${letter}</div>`;
-        });
+        document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => 
+            `<div class="letter" onclick="matchLetter('${letter}', 'lowercase')">${letter}</div>`
+        ).join('');
+        document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => 
+            `<div class="letter" onclick="matchLetter('${letter}', 'uppercase')">${letter}</div>`
+        ).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
     }
@@ -222,40 +210,40 @@
     function generateRandomLetters() {
         const lowercase = 'abcdefghijklmnopqrstuvwxyz';
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const randomLowercase = lowercase[Math.floor(Math.random() * lowercase.length)];
-        const randomUppercase = uppercase[Math.floor(Math.random() * uppercase.length)];
+        const randomLowercase = [lowercase[Math.floor(Math.random() * lowercase.length)]];
+        const randomUppercase = [uppercase[Math.floor(Math.random() * uppercase.length)]];
         return {
-            lowercase: [randomLowercase],
-            uppercase: [randomUppercase],
+            lowercase: randomLowercase,
+            uppercase: randomUppercase,
         };
     }
 
-    function checkMatch() {
-        const lowerLetters = document.querySelectorAll('#letter-pairs .letter:nth-child(-n+1)');
-        const upperLetters = document.querySelectorAll('#letter-pairs .letter:nth-child(n+1)');
+    function matchLetter(letter, type) {
+        const targetType = type === 'lowercase' ? 'uppercase' : 'lowercase';
+        const otherLetters = document.querySelectorAll(`#${targetType} .letter`);
+        let matchFound = false;
 
-        lowerLetters.forEach((lower, index) => {
-            const lowerChar = lower.textContent;
-            const upperChar = upperLetters[index].textContent;
-
-            if (upperChar.toLowerCase() === lowerChar) {
+        otherLetters.forEach(otherLetter => {
+            if (otherLetter.textContent.toLowerCase() === letter) {
+                matchFound = true;
                 greenStars++;
                 document.getElementById('stars').innerHTML += '<span class="star">⭐</span>';
-            } else {
-                document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
+                otherLetter.style.backgroundColor = '#c8e6c9'; // Change color for correct match
+                otherLetter.style.pointerEvents = 'none'; // Disable further clicks
             }
         });
 
+        if (!matchFound) {
+            document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
+        }
+
         if (greenStars > 5) {
             document.getElementById('congrats').style.display = 'block';
-        } else {
-            startGame();
         }
     }
 
     window.onload = () => {
         showTab('flashcards');
-        startGame();
     };
 </script>
 
