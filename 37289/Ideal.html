@@ -26,6 +26,7 @@
             margin: 0 5px;
             cursor: pointer;
             border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s, transform 0.2s;
         }
         .tab:hover {
@@ -89,6 +90,9 @@
         #congrats {
             display: none;
         }
+        .game-row {
+            margin: 20px 0;
+        }
     </style>
 </head>
 <body>
@@ -144,7 +148,7 @@
         const categoriesDiv = document.getElementById('categories');
         categoriesDiv.innerHTML = ''; // Clear previous categories
         for (const category in categories) {
-            categoriesDiv.innerHTML += `<button class="btn-match" onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
+            categoriesDiv.innerHTML += `<button class="btn-match" style="background-color: #ffc107; color: white; padding: 10px; border: none; border-radius: 5px; margin: 5px; cursor: pointer;" onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
         }
     }
 
