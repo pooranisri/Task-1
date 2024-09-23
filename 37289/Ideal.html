@@ -268,10 +268,10 @@
             const isMatch = selectedLowercase.toUpperCase() === selectedUppercase;
             if (isMatch) {
                 greenStars++;
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">★</span>'; // Green star for correct match
                 hideMatchedLetters(selectedLowercase, selectedUppercase);
             } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">★</span>'; // Red star for incorrect match
             }
             resetSelections();
             // Show congratulations message if more than 5 stars
