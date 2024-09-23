@@ -85,6 +85,16 @@
         #congrats {
             display: none;
         }
+        .letter {
+            display: inline-block;
+            margin: 10px;
+            font-size: 30px;
+        }
+        .game-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -97,14 +107,22 @@
 
 <div id="flashcards" class="content">
     <h2>Flashcards</h2>
-    <div id="categories"></div>
+    <div id="categories">
+        <button onclick="showCategory('fruits')">Fruits</button>
+        <button onclick="showCategory('vegetables')">Vegetables</button>
+        <button onclick="showCategory('colors')">Colors</button>
+        <button onclick="showCategory('vehicles')">Vehicles</button>
+    </div>
     <div class="flashcard" id="flashcard-content"></div>
 </div>
 
 <div id="game" class="content">
     <h2>Matching Game</h2>
     <div class="game" id="game-content">
-        <div id="letters"></div>
+        <div class="game-row">
+            <div id="lowercase" class="letters"></div>
+            <div id="uppercase" class="letters"></div>
+        </div>
         <button class="btn-match" onclick="checkMatch()">Check Match</button>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
@@ -138,6 +156,7 @@
 
     function displayCategories() {
         const categoriesDiv = document.getElementById('categories');
+        categoriesDiv.innerHTML = ''; // Clear previous categories
         for (const category in categories) {
             categoriesDiv.innerHTML += `<button onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
         }
@@ -147,7 +166,8 @@
         document.querySelectorAll('.content').forEach(div => div.style.display = 'none');
         document.getElementById(tab).style.display = 'block';
         if (tab === 'flashcards') {
-            showCategory(currentCategory || Object.keys(categories)[0]);
+            displayCategories();
+            showCategory('fruits'); // Default to fruits when showing flashcards
         }
     }
 
@@ -190,8 +210,8 @@
 
     function startGame() {
         const letters = generateRandomLetters();
-        const lettersDiv = document.getElementById('letters');
-        lettersDiv.innerHTML = letters.map(letter => `<span>${letter}</span>`).join('');
+        document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => `<div class="letter">${letter}</div>`).join('');
+        document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => `<div class="letter">${letter}</div>`).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
     }
@@ -201,22 +221,33 @@
         const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const randomLowercase = lowercase[Math.floor(Math.random() * lowercase.length)];
         const randomUppercase = uppercase[Math.floor(Math.random() * uppercase.length)];
-        return [randomLowercase, randomUppercase].sort(() => Math.random() - 0.5);
+        return {
+            lowercase: [randomLowercase],
+            uppercase: [randomUppercase],
+        };
     }
 
     function checkMatch() {
-        const letters = document.querySelectorAll('#letters span');
-        const result = Array.from(letters).every((el, index) => {
-            const lower = el.textContent.toLowerCase();
-            const upper = el.textContent.toUpperCase();
-            return (lower.charCodeAt(0) === upper.charCodeAt(0) + 32 || lower.charCodeAt(0) + 32 === upper.charCodeAt(0));
+        const lowerLetters = document.querySelectorAll('#lowercase .letter');
+        const upperLetters = document.querySelectorAll('#uppercase .letter');
+        let isMatch = true;
+
+        lowerLetters.forEach((lower, index) => {
+            const lowerChar = lower.textContent;
+            const upperChar = upperLetters[index].textContent;
+
+            if (upperChar.toLowerCase() !== lowerChar) {
+                isMatch = false;
+            }
         });
-        if (result) {
+
+        if (isMatch) {
             greenStars++;
             document.getElementById('stars').innerHTML += '<span class="star">⭐</span>';
         } else {
             document.getElementById('stars').innerHTML += '<span class="star">❌</span>';
         }
+
         if (greenStars > 5) {
             document.getElementById('congrats').style.display = 'block';
         } else {
@@ -225,7 +256,6 @@
     }
 
     window.onload = () => {
-        displayCategories();
         showTab('flashcards');
         startGame();
     };
