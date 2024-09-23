@@ -107,7 +107,7 @@
         }
         .back-button {
             background-color: #ff5722;
-            margin-left: 10px;
+            margin-right: 10px;
         }
         .next-button:hover {
             background-color: #1976d2;
@@ -138,8 +138,8 @@
         <div id="uppercase" class="game-row"></div>
         <div id="stars"></div>
         <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
         <button class="back-button" onclick="showTab('flashcards')">Back</button>
+        <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
     </div>
 </div>
 
@@ -168,6 +168,8 @@
     let currentCategory = '';
     let currentIndex = 0;
     let greenStars = 0;
+    let selectedLowercase = '';
+    let selectedUppercase = '';
 
     function displayCategories() {
         const categoriesDiv = document.getElementById('categories');
@@ -225,13 +227,15 @@
     function startGame() {
         const letters = generateRandomLetters();
         document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => 
-            `<div class="letter" onclick="matchLetter('${letter}', 'lowercase')">${letter}</div>`
+            `<div class="letter" onclick="selectLowercase('${letter}')">${letter}</div>`
         ).join('');
         document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => 
-            `<div class="letter" onclick="matchLetter('${letter}', 'uppercase')">${letter}</div>`
+            `<div class="letter" onclick="selectUppercase('${letter}')">${letter}</div>`
         ).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
+        selectedLowercase = '';
+        selectedUppercase = '';
         document.getElementById('congrats').style.display = 'none'; // Hide congratulations message
     }
 
@@ -249,30 +253,44 @@
         };
     }
 
-    function matchLetter(letter, type) {
-        const targetType = type === 'lowercase' ? 'uppercase' : 'lowercase';
-        const otherLetters = document.querySelectorAll(`#${targetType} .letter`);
-        let matchFound = false;
+    function selectLowercase(letter) {
+        selectedLowercase = letter;
+        checkMatch();
+    }
 
-        otherLetters.forEach(otherLetter => {
-            if (otherLetter.textContent.toLowerCase() === letter) {
-                matchFound = true;
+    function selectUppercase(letter) {
+        selectedUppercase = letter;
+        checkMatch();
+    }
+
+    function checkMatch() {
+        if (selectedLowercase && selectedUppercase) {
+            const isMatch = selectedLowercase.toUpperCase() === selectedUppercase;
+            if (isMatch) {
                 greenStars++;
                 document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
-                otherLetter.style.display = 'none'; // Hide matched letter
-                const matchedLetterDiv = document.querySelector(`#${type} .letter:contains("${letter}")`);
-                if (matchedLetterDiv) matchedLetterDiv.style.display = 'none'; // Hide matched letter
+                hideMatchedLetters(selectedLowercase, selectedUppercase);
+            } else {
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
             }
-        });
-
-        if (!matchFound) {
-            document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
+            resetSelections();
+            // Show congratulations message if more than 5 stars
+            if (greenStars > 5) {
+                document.getElementById('congrats').style.display = 'block';
+            }
         }
+    }
 
-        // Show congratulations message if more than 5 stars
-        if (greenStars > 5) {
-            document.getElementById('congrats').style.display = 'block';
-        }
+    function hideMatchedLetters(lowercaseLetter, uppercaseLetter) {
+        const lowerDiv = document.querySelector(`#lowercase .letter:contains("${lowercaseLetter}")`);
+        const upperDiv = document.querySelector(`#uppercase .letter:contains("${uppercaseLetter}")`);
+        if (lowerDiv) lowerDiv.style.display = 'none'; // Hide matched lowercase letter
+        if (upperDiv) upperDiv.style.display = 'none'; // Hide matched uppercase letter
+    }
+
+    function resetSelections() {
+        selectedLowercase = '';
+        selectedUppercase = '';
     }
 
     function nextStep() {
