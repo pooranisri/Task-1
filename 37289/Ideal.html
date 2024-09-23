@@ -69,9 +69,6 @@
         .audio-btn:hover {
             background-color: #45a049;
         }
-        .game {
-            margin-top: 20px;
-        }
         .match {
             display: flex;
             justify-content: space-between;
@@ -111,10 +108,10 @@
 <div id="flashcards" class="content active">
     <h2>Flashcards</h2>
     <div class="category" id="category">
-        <div onclick="showCategory('fruits')">Fruits</div>
-        <div onclick="showCategory('vegetables')">Vegetables</div>
-        <div onclick="showCategory('colors')">Colors</div>
-        <div onclick="showCategory('vehicles')">Vehicles</div>
+        <div onclick="showCategory('fruits')"><img src="https://via.placeholder.com/100?text=Fruits" alt="Fruits">Fruits</div>
+        <div onclick="showCategory('vegetables')"><img src="https://via.placeholder.com/100?text=Vegetables" alt="Vegetables">Vegetables</div>
+        <div onclick="showCategory('colors')"><img src="https://via.placeholder.com/100?text=Colors" alt="Colors">Colors</div>
+        <div onclick="showCategory('vehicles')"><img src="https://via.placeholder.com/100?text=Vehicles" alt="Vehicles">Vehicles</div>
     </div>
     <div id="flashcard" class="flashcard"></div>
     <button onclick="prevImage()">Prev</button>
@@ -179,7 +176,7 @@
         ],
     };
 
-    let currentCategory = 'fruits';
+    let currentCategory = '';
     let currentIndex = 0;
 
     function showTab(tab) {
@@ -187,14 +184,24 @@
             content.classList.remove('active');
         });
         document.getElementById(tab).classList.add('active');
-        if (tab === 'flashcards') showCategory(currentCategory);
-        else startGame();
+        if (tab === 'flashcards') {
+            showCategories();
+        } else {
+            startGame();
+        }
+    }
+
+    function showCategories() {
+        const categoryDiv = document.getElementById('category');
+        categoryDiv.style.display = 'flex';
+        document.getElementById('flashcard').innerHTML = '';
     }
 
     function showCategory(category) {
         currentCategory = category;
         currentIndex = 0;
         renderFlashcard();
+        document.getElementById('category').style.display = 'none';
     }
 
     function renderFlashcard() {
