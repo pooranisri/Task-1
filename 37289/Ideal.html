@@ -58,15 +58,16 @@
             height: 150px;
             margin: 10px;
         }
-        .star {
-            font-size: 30px;
-            display: none;
-        }
         .game {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
+        }
+        .letters-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
         }
         .letter {
             font-size: 24px;
@@ -74,7 +75,6 @@
             cursor: pointer;
             padding: 10px;
             border: 2px solid #ccc;
-            display: inline-block;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
@@ -105,7 +105,12 @@
 
     <div id="games" class="tab">
         <h2>Matching Game</h2>
-        <div class="game" id="game-content"></div>
+        <div class="game" id="game-content">
+            <div class="letters-container">
+                <div id="lowercase-container"></div>
+                <div id="uppercase-container"></div>
+            </div>
+        </div>
         <button class="button" onclick="startGame()">Start Game</button>
         <div class="star" id="result"></div>
         <button class="button" onclick="showTab('flashcards')">Back to Flashcards</button>
@@ -211,27 +216,31 @@
         function startGame() {
             greenStars = 0;
             firstSelection = null;
-            const gameContent = document.getElementById('game-content');
-            gameContent.innerHTML = '';
+            document.getElementById('lowercase-container').innerHTML = '';
+            document.getElementById('uppercase-container').innerHTML = '';
 
             // Generate pairs of letters
             const letters = [];
-            for (let i = 0; i < 10; i++) {
-                const upper = String.fromCharCode(65 + Math.floor(Math.random() * 26));
-                const lower = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+            for (let i = 0; i < 13; i++) {
+                const lower = String.fromCharCode(97 + i);
+                const upper = String.fromCharCode(65 + i);
                 letters.push(lower, upper);
             }
 
             // Shuffle the letters
             letters.sort(() => Math.random() - 0.5);
 
-            // Display the letters
+            // Display lowercase letters
             letters.forEach(letter => {
                 const letterElement = document.createElement('span');
                 letterElement.textContent = letter;
                 letterElement.className = 'letter';
                 letterElement.onclick = () => selectLetter(letterElement);
-                gameContent.appendChild(letterElement);
+                if (letter === letter.toLowerCase()) {
+                    document.getElementById('lowercase-container').appendChild(letterElement);
+                } else {
+                    document.getElementById('uppercase-container').appendChild(letterElement);
+                }
             });
         }
 
