@@ -103,7 +103,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin: 0 10px; /* Space between buttons */
+            margin: 0 10px;
         }
         .next-button {
             background-color: #2196f3;
@@ -174,6 +174,7 @@
     let greenStars = 0;
     let selectedLowercase = '';
     let selectedUppercase = '';
+    let matchedPairs = []; // To track matched pairs
 
     function displayCategories() {
         const categoriesDiv = document.getElementById('categories');
@@ -240,6 +241,7 @@
         greenStars = 0;
         selectedLowercase = '';
         selectedUppercase = '';
+        matchedPairs = [];
         document.getElementById('congrats').style.display = 'none'; // Hide congratulations message
     }
 
@@ -274,12 +276,13 @@
     function checkMatch() {
         if (selectedLowercase && selectedUppercase) {
             const isMatch = selectedLowercase.toUpperCase() === selectedUppercase;
-            if (isMatch) {
+            if (isMatch && !matchedPairs.includes(selectedLowercase + selectedUppercase)) {
                 greenStars++;
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
+                matchedPairs.push(selectedLowercase + selectedUppercase);
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #00FF00;">★</span>'; // Green star for correct match
                 hideMatchedLetters(selectedLowercase, selectedUppercase);
             } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
+                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">★</span>'; // Red star for incorrect match
             }
             resetSelections();
             // Show congratulations message if more than 5 stars
