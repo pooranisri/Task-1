@@ -223,6 +223,7 @@
         ).join('');
         document.getElementById('stars').innerHTML = '';
         greenStars = 0;
+        document.getElementById('congrats').style.display = 'none'; // Hide congratulations message
     }
 
     function generateRandomLetters() {
@@ -258,8 +259,15 @@
             document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
         }
 
+        // Show congratulations message if more than 5 stars
         if (greenStars > 5) {
             document.getElementById('congrats').style.display = 'block';
+        } else {
+            // Go back to main page after a brief delay
+            setTimeout(() => {
+                showTab('flashcards'); // Return to the Flashcards tab
+                startGame(); // Restart the game
+            }, 2000); // 2 seconds delay
         }
     }
 
