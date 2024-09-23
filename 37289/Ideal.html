@@ -49,38 +49,20 @@
             justify-content: space-around;
             margin-bottom: 20px;
         }
-        .category img {
-            width: 100px;
-            height: 100px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .category img:hover {
-            transform: scale(1.1);
-        }
         .flashcard {
             text-align: center;
             margin: 20px;
         }
-        .flashcard img {
-            width: 200px;
-            height: 200px;
-        }
-        .buttons {
-            margin-top: 10px;
-        }
-        .buttons button {
-            margin: 5px;
-            padding: 10px;
-        }
         .game-container {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
         .match {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+            margin: 10px;
         }
         .match div {
             width: 50px;
@@ -139,8 +121,13 @@
 <div id="game" class="content">
     <h2>Matching Game</h2>
     <div class="game-container">
-        <div class="match" id="matchContainer"></div>
-        <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
+        <div class="match" id="uppercaseContainer"></div>
+        <div class="match" id="lowercaseContainer"></div>
+    </div>
+    <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
+    <div>
+        <button onclick="nextGame()">Next Game</button>
+        <button onclick="backToMain()">Back</button>
     </div>
 </div>
 
@@ -169,6 +156,9 @@
             { name: 'Truck', img: 'https://via.placeholder.com/200/ffff00/000000?text=Truck', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
         ]
     };
+
+    let matchCount = 0;
+    let paired = [];
 
     function showTab(tab) {
         document.querySelectorAll('.content').forEach(div => div.classList.remove('active'));
@@ -212,45 +202,70 @@
         }
     }
 
-    let matchCount = 0;
-
     function startGame() {
-        const matchContainer = document.getElementById('matchContainer');
-        matchContainer.innerHTML = '';
+        const upperCaseLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+        const lowerCaseLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+        const uppercaseContainer = document.getElementById('uppercaseContainer');
+        const lowercaseContainer = document.getElementById('lowercaseContainer');
+        uppercaseContainer.innerHTML = '';
+        lowercaseContainer.innerHTML = '';
         matchCount = 0;
+        paired = [];
 
-        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const shuffled = letters.split('').sort(() => Math.random() - 0.5);
-
-        shuffled.forEach(letter => {
+        // Shuffle and display letters
+        upperCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
             const div = document.createElement('div');
             div.textContent = letter;
-            div.addEventListener('click', () => checkMatch(letter));
-            matchContainer.appendChild(div);
+            div.addEventListener('click', () => checkMatch(letter, true));
+            uppercaseContainer.appendChild(div);
+        });
+
+        lowerCaseLetters.sort(() => 0.5 - Math.random()).forEach(letter => {
+            const div = document.createElement('div');
+            div.textContent = letter;
+            div.addEventListener('click', () => checkMatch(letter, false));
+            lowercaseContainer.appendChild(div);
         });
     }
 
-    function checkMatch(letter) {
-        const isLowercase = letter === letter.toLowerCase();
-        const matchingLetter = isLowercase ? letter.toUpperCase() : letter.toLowerCase();
-        if (Math.random() > 0.5) { // Randomly simulate correct and incorrect matches
-            matchCount++;
-            showStar(true);
-        } else {
-            showStar(false);
-        }
-        if (matchCount > 5) {
-            document.getElementById('congratulationsMessage').style.display = 'block';
+    function checkMatch(letter, isUpper) {
+        const targetLetter = isUpper ? letter.toLowerCase() : letter.toUpperCase();
+        const existingPair = paired.includes(targetLetter);
+
+        if (!existingPair) {
+            paired.push(targetLetter);
+            const isMatch = document.querySelector(`#lowercaseContainer div:contains(${targetLetter})`) || document.querySelector(`#uppercaseContainer div:contains(${letter})`);
+            if (isMatch) {
+                matchCount++;
+                displayStar(true);
+                // Hide matched pairs
+                isMatch.style.display = 'none';
+                document.querySelector(`#uppercaseContainer div:contains(${letter})`).style.display = 'none';
+                if (matchCount > 5) {
+                    document.getElementById('congratulationsMessage').style.display = 'block';
+                }
+            } else {
+                displayStar(false);
+            }
         }
     }
 
-    function showStar(correct) {
+    function displayStar(correct) {
         const star = document.createElement('div');
         star.className = 'star';
         star.textContent = correct ? '⭐' : '❌';
-        document.getElementById('matchContainer').appendChild(star);
+        document.getElementById('uppercaseContainer').appendChild(star);
         star.style.display = 'block';
         setTimeout(() => star.style.display = 'none', 1000);
+    }
+
+    function nextGame() {
+        // Logic to load the next game could be added here
+        alert('Next game functionality is not yet implemented!');
+    }
+
+    function backToMain() {
+        showTab('flashcards');
     }
 
     function resetFlashcard() {
