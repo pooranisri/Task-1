@@ -6,315 +6,259 @@
     <title>Kids Learning App</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #e0f7fa;
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
             margin: 0;
             padding: 0;
         }
-        h1 {
-            text-align: center;
-            color: #ff5722;
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        .tab {
-            padding: 15px 25px;
-            background-color: #ffeb3b;
-            margin: 0 5px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .tab:hover {
-            background-color: #ffd600;
-        }
-        .content {
-            display: none;
+        header {
+            background-color: #ffcc00;
             text-align: center;
             padding: 20px;
-            border: 2px solid #ff5722;
-            border-radius: 5px;
-            background-color: #ffffff;
-            margin: 0 auto;
-            max-width: 600px;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            background-color: #ffcc00;
+        }
+        nav button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s;
+        }
+        nav button:hover {
+            background-color: #ffd700;
+        }
+        .content {
+            padding: 20px;
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .category {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .category img {
+            width: 100px;
+            height: 100px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .category img:hover {
+            transform: scale(1.1);
+        }
+        .flashcard {
+            text-align: center;
+            margin: 20px;
         }
         .flashcard img {
-            width: 150px;
-            height: 150px;
-            margin: 10px;
+            width: 200px;
+            height: 200px;
         }
-        .flashcard button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+        .buttons {
+            margin-top: 10px;
         }
-        .game {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .star {
-            font-size: 50px;
-        }
-        .letter {
-            display: inline-block;
-            margin: 10px;
-            font-size: 30px;
+        .buttons button {
+            margin: 5px;
             padding: 10px;
-            border: 2px dashed #ff5722;
-            border-radius: 5px;
+        }
+        .game-container {
+            text-align: center;
+        }
+        .match {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .match div {
+            width: 50px;
+            height: 50px;
+            margin: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            border: 2px solid #333;
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .letter:hover {
-            background-color: #ffe0b2;
+        .match div:hover {
+            background-color: #e0e0e0;
         }
-        #congrats {
+        .star {
+            font-size: 40px;
             display: none;
         }
-        .button-container {
+        .congratulations {
+            display: none;
+            font-size: 24px;
+            color: green;
             margin-top: 20px;
-        }
-        .next-button, .back-button {
-            padding: 10px 20px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-        .next-button {
-            background-color: #2196f3;
-        }
-        .back-button {
-            background-color: #ff5722;
-        }
-        .next-button:hover {
-            background-color: #1976d2;
-        }
-        .back-button:hover {
-            background-color: #e64a19;
         }
     </style>
 </head>
 <body>
 
-<h1>Kids Learning App</h1>
-<div class="tabs">
-    <div class="tab" onclick="showTab('flashcards')">Flashcards</div>
-    <div class="tab" onclick="showTab('game')">Game</div>
-</div>
+<header>Kids Learning App</header>
 
-<div id="flashcards" class="content">
-    <h2>Flashcards</h2>
-    <div id="categories" style="margin-bottom: 20px;"></div>
-    <div class="flashcard" id="flashcard-content"></div>
-</div>
+<nav>
+    <button onclick="showTab('flashcards')">Flashcards</button>
+    <button onclick="showTab('game')">Game</button>
+</nav>
 
-<div id="game" class="content">
-    <h2>Matching Game</h2>
-    <div class="game" id="game-content">
-        <div id="lowercase" class="game-row"></div>
-        <div id="uppercase" class="game-row"></div>
-        <div id="stars"></div>
-        <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <div class="button-container">
-            <button class="back-button" onclick="showTab('flashcards')">Back</button>
-            <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
+<div id="flashcards" class="content active">
+    <h2>Select a Category</h2>
+    <div class="category">
+        <img src="https://via.placeholder.com/100/ff0000/ffffff?text=Fruits" alt="Fruits" onclick="showFlashcard('fruits')">
+        <img src="https://via.placeholder.com/100/00ff00/ffffff?text=Vegetables" alt="Vegetables" onclick="showFlashcard('vegetables')">
+        <img src="https://via.placeholder.com/100/0000ff/ffffff?text=Colors" alt="Colors" onclick="showFlashcard('colors')">
+        <img src="https://via.placeholder.com/100/ffff00/000000?text=Vehicles" alt="Vehicles" onclick="showFlashcard('vehicles')">
+    </div>
+    <div id="flashcardContent" class="flashcard">
+        <img id="flashcardImage" src="" alt="">
+        <div class="buttons">
+            <button onclick="playAudio()">Play Sound</button>
+            <button onclick="prevImage()">Prev</button>
+            <button onclick="nextImage()">Next</button>
         </div>
     </div>
 </div>
 
-<script>
-    const mockData = {
-        fruits: [
-            { name: 'Apple', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Banana', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        vegetables: [
-            { name: 'Carrot', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Carrot', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Broccoli', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Broccoli', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        colors: [
-            { name: 'Red', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Red', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Blue', img: 'https://via.placeholder.com/150/007bff/ffffff?text=Blue', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        vehicles: [
-            { name: 'Car', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Car', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Bike', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Bike', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-    };
+<div id="game" class="content">
+    <h2>Matching Game</h2>
+    <div class="game-container">
+        <div class="match" id="matchContainer"></div>
+        <div class="congratulations" id="congratulationsMessage">Congratulations! You matched more than 5!</div>
+    </div>
+</div>
 
+<script>
     let currentCategory = '';
     let currentIndex = 0;
-    let greenStars = 0;
-    let matchedPairs = [];
-
-    function displayCategories() {
-        const categoriesDiv = document.getElementById('categories');
-        categoriesDiv.innerHTML = ''; // Clear previous categories
-        for (const category in mockData) {
-            categoriesDiv.innerHTML += `<button style="background-color: #ffc107; color: white; padding: 10px; border: none; border-radius: 5px; margin: 5px; cursor: pointer;" onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
-        }
-    }
+    const categories = {
+        fruits: [
+            { name: 'Apple', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Banana', img: 'https://via.placeholder.com/200/ffff00/000000?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Cherry', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Cherry', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
+        ],
+        vegetables: [
+            { name: 'Carrot', img: 'https://via.placeholder.com/200/ff7f00/ffffff?text=Carrot', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Broccoli', img: 'https://via.placeholder.com/200/008000/ffffff?text=Broccoli', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Pepper', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Pepper', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
+        ],
+        colors: [
+            { name: 'Red', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Red', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Green', img: 'https://via.placeholder.com/200/00ff00/ffffff?text=Green', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Blue', img: 'https://via.placeholder.com/200/0000ff/ffffff?text=Blue', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
+        ],
+        vehicles: [
+            { name: 'Car', img: 'https://via.placeholder.com/200/0000ff/ffffff?text=Car', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Bike', img: 'https://via.placeholder.com/200/ff0000/ffffff?text=Bike', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' },
+            { name: 'Truck', img: 'https://via.placeholder.com/200/ffff00/000000?text=Truck', audio: 'https://www.soundjay.com/button/sounds/button-16.mp3' }
+        ]
+    };
 
     function showTab(tab) {
-        document.querySelectorAll('.content').forEach(div => div.style.display = 'none');
-        document.getElementById(tab).style.display = 'block';
+        document.querySelectorAll('.content').forEach(div => div.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
         if (tab === 'flashcards') {
-            displayCategories(); // Show categories when Flashcards is opened
+            resetFlashcard();
         } else if (tab === 'game') {
-            startGame(); // Start the game when the Game tab is opened
+            startGame();
         }
     }
 
-    function showCategory(category) {
+    function showFlashcard(category) {
         currentCategory = category;
         currentIndex = 0;
         displayFlashcard();
     }
 
     function displayFlashcard() {
-        const flashcardContent = document.getElementById('flashcard-content');
-        const data = mockData[currentCategory][currentIndex];
-        flashcardContent.innerHTML = `
-            <img src="${data.img}" alt="${data.name}">
-            <div>${data.name}</div>
-            <button onclick="playAudio('${data.audio}')">Pronounce</button>
-            <div>
-                <button onclick="prevFlashcard()">Prev</button>
-                <button onclick="nextFlashcard()">Next</button>
-            </div>
-        `;
+        const card = categories[currentCategory][currentIndex];
+        document.getElementById('flashcardImage').src = card.img;
+        document.getElementById('flashcardContent').style.display = 'block';
     }
 
-    function playAudio(audioSrc) {
-        const audio = new Audio(audioSrc);
+    function playAudio() {
+        const card = categories[currentCategory][currentIndex];
+        const audio = new Audio(card.audio);
         audio.play();
     }
 
-    function prevFlashcard() {
-        if (currentIndex > 0) currentIndex--;
-        displayFlashcard();
+    function nextImage() {
+        if (currentIndex < categories[currentCategory].length - 1) {
+            currentIndex++;
+            displayFlashcard();
+        }
     }
 
-    function nextFlashcard() {
-        if (currentIndex < mockData[currentCategory].length - 1) currentIndex++;
-        displayFlashcard();
+    function prevImage() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            displayFlashcard();
+        }
     }
+
+    let matchCount = 0;
 
     function startGame() {
-        matchedPairs = [];
-        greenStars = 0;
-        document.getElementById('stars').innerHTML = '';
-        document.getElementById('congrats').style.display = 'none'; // Hide congratulations message
-        const letters = generateRandomLetters();
-        displayLetters(letters);
-    }
+        const matchContainer = document.getElementById('matchContainer');
+        matchContainer.innerHTML = '';
+        matchCount = 0;
 
-    function generateRandomLetters() {
-        const commonLetters = 'abcde'; // Common letters for matching
-        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const randomLowercase = [...lowercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random lowercase letters
-        const randomUppercase = [...uppercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random uppercase letters
-        
-        return {
-            lowercase: randomLowercase.concat(commonLetters.split('').sort(() => Math.random() - 0.5)),
-            uppercase: randomUppercase.concat(commonLetters.toUpperCase().split('').sort(() => Math.random() - 0.5)),
-        };
-    }
+        const letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const shuffled = letters.split('').sort(() => Math.random() - 0.5);
 
-    function displayLetters(letters) {
-        document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => 
-            `<div class="letter" onclick="selectLowercase('${letter}')">${letter}</div>`
-        ).join('');
-        document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => 
-            `<div class="letter" onclick="selectUppercase('${letter}')">${letter}</div>`
-        ).join('');
-    }
-
-    let selectedLowercase = '';
-    let selectedUppercase = '';
-
-    function selectLowercase(letter) {
-        if (!selectedLowercase) {
-            selectedLowercase = letter;
-            checkMatch();
-        }
-    }
-
-    function selectUppercase(letter) {
-        if (!selectedUppercase) {
-            selectedUppercase = letter;
-            checkMatch();
-        }
-    }
-
-    function checkMatch() {
-        if (selectedLowercase && selectedUppercase) {
-            const isMatch = selectedLowercase.toUpperCase() === selectedUppercase;
-            if (isMatch) {
-                greenStars++;
-                matchedPairs.push(selectedLowercase + selectedUppercase);
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #8A9A5B;">⭐</span>'; // Green star for correct match
-                hideMatchedLetters(selectedLowercase, selectedUppercase);
-
-                // Show congratulations message if more than 5 stars
-                if (greenStars > 5) {
-                    document.getElementById('congrats').style.display = 'block';
-                }
-            } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">❌</span>'; // Red star for incorrect match
-            }
-            resetSelections(); // Reset selections after checking
-        }
-    }
-
-    function hideMatchedLetters(lowercaseLetter, uppercaseLetter) {
-        const lowerDiv = document.querySelector(`#lowercase .letter:contains("${lowercaseLetter}")`);
-        const upperDiv = document.querySelector(`#uppercase .letter:contains("${uppercaseLetter}")`);
-        const lowerElements = document.querySelectorAll('#lowercase .letter');
-        const upperElements = document.querySelectorAll('#uppercase .letter');
-
-        lowerElements.forEach(element => {
-            if (element.textContent === lowercaseLetter) {
-                element.style.display = 'none'; // Hide matched lowercase letter
-            }
-        });
-
-        upperElements.forEach(element => {
-            if (element.textContent === uppercaseLetter) {
-                element.style.display = 'none'; // Hide matched uppercase letter
-            }
+        shuffled.forEach(letter => {
+            const div = document.createElement('div');
+            div.textContent = letter;
+            div.addEventListener('click', () => checkMatch(letter));
+            matchContainer.appendChild(div);
         });
     }
 
-    function resetSelections() {
-        selectedLowercase = '';
-        selectedUppercase = '';
-    }
-
-    function nextStep() {
-        if (matchedPairs.length >= 10) { // Assuming there are 10 letters to match
-            startGame(); // Start the next game set
+    function checkMatch(letter) {
+        const isLowercase = letter === letter.toLowerCase();
+        const matchingLetter = isLowercase ? letter.toUpperCase() : letter.toLowerCase();
+        if (Math.random() > 0.5) { // Randomly simulate correct and incorrect matches
+            matchCount++;
+            showStar(true);
         } else {
-            showTab('flashcards'); // Return to the Flashcards tab
+            showStar(false);
+        }
+        if (matchCount > 5) {
+            document.getElementById('congratulationsMessage').style.display = 'block';
         }
     }
 
-    window.onload = () => {
-        showTab('flashcards');
-    };
+    function showStar(correct) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.textContent = correct ? '⭐' : '❌';
+        document.getElementById('matchContainer').appendChild(star);
+        star.style.display = 'block';
+        setTimeout(() => star.style.display = 'none', 1000);
+    }
 
-    displayCategories(); // Populate categories on load
+    function resetFlashcard() {
+        document.getElementById('flashcardContent').style.display = 'none';
+    }
+
+    // Initialize the app
+    showTab('flashcards');
 </script>
 
 </body>
