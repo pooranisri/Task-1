@@ -7,315 +7,223 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #e0f7fa;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
             margin: 0;
-            padding: 0;
+            padding: 20px;
         }
         h1 {
-            text-align: center;
-            color: #ff5722;
-        }
-        .tabs {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
+            color: #ff6347;
+            font-size: 2.5em;
         }
         .tab {
-            padding: 15px 25px;
-            background-color: #ffeb3b;
-            margin: 0 5px;
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .button {
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
             cursor: pointer;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
-        .tab:hover {
-            background-color: #ffd600;
+        .button:hover {
+            background-color: #ff4500;
         }
-        .content {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            border: 2px solid #ff5722;
-            border-radius: 5px;
-            background-color: #ffffff;
-            margin: 0 auto;
-            max-width: 600px;
-        }
-        .flashcard img {
-            width: 150px;
-            height: 150px;
-            margin: 10px;
-        }
-        .flashcard button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
+        .category {
+            display: inline-block;
+            margin: 20px;
+            padding: 10px;
+            background-color: #ffe4b5;
+            border-radius: 10px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
-        .game {
+        .category:hover {
+            transform: scale(1.05);
+        }
+        .image-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .star {
-            font-size: 50px;
-        }
-        .letter {
-            display: inline-block;
+        .image-container img {
+            width: 150px;
+            height: 150px;
             margin: 10px;
+        }
+        .star {
             font-size: 30px;
-            padding: 10px;
-            border: 2px dashed #ff5722;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .letter:hover {
-            background-color: #ffe0b2;
-        }
-        #congrats {
             display: none;
         }
-        .button-container {
-            margin-top: 20px;
-        }
-        .next-button, .back-button {
-            padding: 10px 20px;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 0 10px;
-        }
-        .next-button {
-            background-color: #2196f3;
-        }
-        .back-button {
-            background-color: #ff5722;
-        }
-        .next-button:hover {
-            background-color: #1976d2;
-        }
-        .back-button:hover {
-            background-color: #e64a19;
+        .game {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
     </style>
 </head>
 <body>
 
-<h1>Kids Learning App</h1>
-<div class="tabs">
-    <div class="tab" onclick="showTab('flashcards')">Flashcards</div>
-    <div class="tab" onclick="showTab('game')">Game</div>
-</div>
+    <h1>Kids Learning App</h1>
+    
+    <button class="button" onclick="showTab('flashcards')">Flashcards</button>
+    <button class="button" onclick="showTab('games')">Games</button>
 
-<div id="flashcards" class="content">
-    <h2>Flashcards</h2>
-    <div id="categories" style="margin-bottom: 20px;"></div>
-    <div class="flashcard" id="flashcard-content"></div>
-</div>
-
-<div id="game" class="content">
-    <h2>Matching Game</h2>
-    <div class="game" id="game-content">
-        <div id="lowercase" class="game-row"></div>
-        <div id="uppercase" class="game-row"></div>
-        <div id="stars"></div>
-        <div id="congrats" class="result">Congratulations! You got more than 5 stars!</div>
-        <div class="button-container">
-            <button class="back-button" onclick="showTab('flashcards')">Back</button>
-            <button class="next-button" id="next-button" onclick="nextStep()">Next</button>
+    <div id="flashcards" class="tab active">
+        <h2>Flashcards</h2>
+        <div>
+            <div class="category" onclick="showCategory('fruits')">Fruits</div>
+            <div class="category" onclick="showCategory('vegetables')">Vegetables</div>
+            <div class="category" onclick="showCategory('colors')">Colors</div>
+            <div class="category" onclick="showCategory('vehicles')">Vehicles</div>
         </div>
+        <div id="flashcard-content" class="image-container"></div>
+        <button class="button" onclick="prevImage()">Prev</button>
+        <button class="button" onclick="nextImage()">Next</button>
     </div>
-</div>
 
-<script>
-    const mockData = {
-        fruits: [
-            { name: 'Apple', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Apple', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Banana', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Banana', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        vegetables: [
-            { name: 'Carrot', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Carrot', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Broccoli', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Broccoli', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        colors: [
-            { name: 'Red', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Red', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Blue', img: 'https://via.placeholder.com/150/007bff/ffffff?text=Blue', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-        vehicles: [
-            { name: 'Car', img: 'https://via.placeholder.com/150/ff6347/ffffff?text=Car', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-            { name: 'Bike', img: 'https://via.placeholder.com/150/ffeb3b/ffffff?text=Bike', audio: 'https://www.soundjay.com/button/sounds/button-3.mp3' },
-        ],
-    };
+    <div id="games" class="tab">
+        <h2>Matching Game</h2>
+        <div class="game">
+            <div id="game-content"></div>
+            <button class="button" onclick="startGame()">Start Game</button>
+            <div class="star" id="result"></div>
+        </div>
+        <button class="button" onclick="showTab('flashcards')">Back to Flashcards</button>
+    </div>
 
-    let currentCategory = '';
-    let currentIndex = 0;
-    let greenStars = 0;
-    let matchedPairs = [];
-
-    function displayCategories() {
-        const categoriesDiv = document.getElementById('categories');
-        categoriesDiv.innerHTML = ''; // Clear previous categories
-        for (const category in mockData) {
-            categoriesDiv.innerHTML += `<button style="background-color: #ffc107; color: white; padding: 10px; border: none; border-radius: 5px; margin: 5px; cursor: pointer;" onclick="showCategory('${category}')">${category.charAt(0).toUpperCase() + category.slice(1)}</button>`;
-        }
-    }
-
-    function showTab(tab) {
-        document.querySelectorAll('.content').forEach(div => div.style.display = 'none');
-        document.getElementById(tab).style.display = 'block';
-        if (tab === 'flashcards') {
-            displayCategories(); // Show categories when Flashcards is opened
-        } else if (tab === 'game') {
-            startGame(); // Start the game when the Game tab is opened
-        }
-    }
-
-    function showCategory(category) {
-        currentCategory = category;
-        currentIndex = 0;
-        displayFlashcard();
-    }
-
-    function displayFlashcard() {
-        const flashcardContent = document.getElementById('flashcard-content');
-        const data = mockData[currentCategory][currentIndex];
-        flashcardContent.innerHTML = `
-            <img src="${data.img}" alt="${data.name}">
-            <div>${data.name}</div>
-            <button onclick="playAudio('${data.audio}')">Pronounce</button>
-            <div>
-                <button onclick="prevFlashcard()">Prev</button>
-                <button onclick="nextFlashcard()">Next</button>
-            </div>
-        `;
-    }
-
-    function playAudio(audioSrc) {
-        const audio = new Audio(audioSrc);
-        audio.play();
-    }
-
-    function prevFlashcard() {
-        if (currentIndex > 0) currentIndex--;
-        displayFlashcard();
-    }
-
-    function nextFlashcard() {
-        if (currentIndex < mockData[currentCategory].length - 1) currentIndex++;
-        displayFlashcard();
-    }
-
-    function startGame() {
-        matchedPairs = [];
-        greenStars = 0;
-        document.getElementById('stars').innerHTML = '';
-        document.getElementById('congrats').style.display = 'none'; // Hide congratulations message
-        const letters = generateRandomLetters();
-        displayLetters(letters);
-    }
-
-    function generateRandomLetters() {
-        const commonLetters = 'abcde'; // Common letters for matching
-        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const randomLowercase = [...lowercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random lowercase letters
-        const randomUppercase = [...uppercase].sort(() => Math.random() - 0.5).slice(0, 5); // Random uppercase letters
-        
-        return {
-            lowercase: randomLowercase.concat(commonLetters.split('').sort(() => Math.random() - 0.5)),
-            uppercase: randomUppercase.concat(commonLetters.toUpperCase().split('').sort(() => Math.random() - 0.5)),
+    <script>
+        const flashcards = {
+            fruits: [
+                { name: "Apple", image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Apple" },
+                { name: "Banana", image: "https://via.placeholder.com/150/FFFF00/000000?text=Banana" },
+                { name: "Cherry", image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Cherry" },
+                { name: "Grape", image: "https://via.placeholder.com/150/800080/FFFFFF?text=Grape" },
+                { name: "Lemon", image: "https://via.placeholder.com/150/FFFF00/000000?text=Lemon" },
+                { name: "Orange", image: "https://via.placeholder.com/150/FFA500/FFFFFF?text=Orange" },
+                { name: "Peach", image: "https://via.placeholder.com/150/FFCC99/000000?text=Peach" },
+                { name: "Pineapple", image: "https://via.placeholder.com/150/FFFF00/000000?text=Pineapple" },
+                { name: "Strawberry", image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Strawberry" },
+                { name: "Watermelon", image: "https://via.placeholder.com/150/00FF00/000000?text=Watermelon" }
+            ],
+            vegetables: [
+                { name: "Carrot", image: "https://via.placeholder.com/150/FFA500/FFFFFF?text=Carrot" },
+                { name: "Broccoli", image: "https://via.placeholder.com/150/008000/FFFFFF?text=Broccoli" },
+                { name: "Potato", image: "https://via.placeholder.com/150/BEBEBE/000000?text=Potato" },
+                { name: "Tomato", image: "https://via.placeholder.com/150/FF6347/FFFFFF?text=Tomato" },
+                { name: "Cucumber", image: "https://via.placeholder.com/150/32CD32/FFFFFF?text=Cucumber" },
+                { name: "Onion", image: "https://via.placeholder.com/150/DAA520/FFFFFF?text=Onion" },
+                { name: "Lettuce", image: "https://via.placeholder.com/150/7CFC00/000000?text=Lettuce" },
+                { name: "Pepper", image: "https://via.placeholder.com/150/FF4500/FFFFFF?text=Pepper" },
+                { name: "Eggplant", image: "https://via.placeholder.com/150/6A5ACD/FFFFFF?text=Eggplant" },
+                { name: "Corn", image: "https://via.placeholder.com/150/FFFF00/000000?text=Corn" }
+            ],
+            colors: [
+                { name: "Red", image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Red" },
+                { name: "Blue", image: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Blue" },
+                { name: "Green", image: "https://via.placeholder.com/150/008000/FFFFFF?text=Green" },
+                { name: "Yellow", image: "https://via.placeholder.com/150/FFFF00/000000?text=Yellow" },
+                { name: "Purple", image: "https://via.placeholder.com/150/800080/FFFFFF?text=Purple" },
+                { name: "Orange", image: "https://via.placeholder.com/150/FFA500/FFFFFF?text=Orange" },
+                { name: "Pink", image: "https://via.placeholder.com/150/FFC0CB/000000?text=Pink" },
+                { name: "Brown", image: "https://via.placeholder.com/150/8B4513/FFFFFF?text=Brown" },
+                { name: "Gray", image: "https://via.placeholder.com/150/808080/FFFFFF?text=Gray" },
+                { name: "Black", image: "https://via.placeholder.com/150/000000/FFFFFF?text=Black" }
+            ],
+            vehicles: [
+                { name: "Car", image: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Car" },
+                { name: "Bicycle", image: "https://via.placeholder.com/150/FFFF00/000000?text=Bicycle" },
+                { name: "Bus", image: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Bus" },
+                { name: "Train", image: "https://via.placeholder.com/150/8B0000/FFFFFF?text=Train" },
+                { name: "Airplane", image: "https://via.placeholder.com/150/00008B/FFFFFF?text=Airplane" },
+                { name: "Boat", image: "https://via.placeholder.com/150/00CED1/000000?text=Boat" },
+                { name: "Truck", image: "https://via.placeholder.com/150/808080/FFFFFF?text=Truck" },
+                { name: "Motorcycle", image: "https://via.placeholder.com/150/FF4500/FFFFFF?text=Motorcycle" },
+                { name: "Helicopter", image: "https://via.placeholder.com/150/4682B4/FFFFFF?text=Helicopter" },
+                { name: "Scooter", image: "https://via.placeholder.com/150/ADFF2F/000000?text=Scooter" }
+            ]
         };
-    }
 
-    function displayLetters(letters) {
-        document.getElementById('lowercase').innerHTML = letters.lowercase.map(letter => 
-            `<div class="letter" onclick="selectLowercase('${letter}')">${letter}</div>`
-        ).join('');
-        document.getElementById('uppercase').innerHTML = letters.uppercase.map(letter => 
-            `<div class="letter" onclick="selectUppercase('${letter}')">${letter}</div>`
-        ).join('');
-    }
+        let currentCategory = '';
+        let currentIndex = 0;
 
-    let selectedLowercase = '';
-    let selectedUppercase = '';
-
-    function selectLowercase(letter) {
-        if (!selectedLowercase) {
-            selectedLowercase = letter;
-            checkMatch();
-        }
-    }
-
-    function selectUppercase(letter) {
-        if (!selectedUppercase) {
-            selectedUppercase = letter;
-            checkMatch();
-        }
-    }
-
-    function checkMatch() {
-        if (selectedLowercase && selectedUppercase) {
-            const isMatch = selectedLowercase.toUpperCase() === selectedUppercase;
-            if (isMatch) {
-                greenStars++;
-                matchedPairs.push(selectedLowercase + selectedUppercase);
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #00FF00;">★</span>'; // Green star for correct match
-                hideMatchedLetters(selectedLowercase, selectedUppercase);
-
-                // Show congratulations message if more than 5 stars
-                if (greenStars > 5) {
-                    document.getElementById('congrats').style.display = 'block';
-                }
-            } else {
-                document.getElementById('stars').innerHTML += '<span class="star" style="color: #FF0000;">★</span>'; // Red star for incorrect match
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            if (tab === 'flashcards') {
+                showCategory(currentCategory || 'fruits');
             }
-            resetSelections(); // Reset selections after checking
         }
-    }
 
-    function hideMatchedLetters(lowercaseLetter, uppercaseLetter) {
-        const lowerDiv = document.querySelector(`#lowercase .letter:contains("${lowercaseLetter}")`);
-        const upperDiv = document.querySelector(`#uppercase .letter:contains("${uppercaseLetter}")`);
-        const lowerElements = document.querySelectorAll('#lowercase .letter');
-        const upperElements = document.querySelectorAll('#uppercase .letter');
-
-        lowerElements.forEach(element => {
-            if (element.textContent === lowercaseLetter) {
-                element.style.display = 'none'; // Hide matched lowercase letter
-            }
-        });
-
-        upperElements.forEach(element => {
-            if (element.textContent === uppercaseLetter) {
-                element.style.display = 'none'; // Hide matched uppercase letter
-            }
-        });
-    }
-
-    function resetSelections() {
-        selectedLowercase = '';
-        selectedUppercase = '';
-    }
-
-    function nextStep() {
-        if (matchedPairs.length >= 10) { // Assuming there are 10 letters to match
-            startGame(); // Start the next game set
-        } else {
-            showTab('flashcards'); // Return to the Flashcards tab
+        function showCategory(category) {
+            currentCategory = category;
+            currentIndex = 0;
+            updateFlashcard();
         }
-    }
 
-    window.onload = () => {
+        function updateFlashcard() {
+            const content = flashcards[currentCategory][currentIndex];
+            const container = document.getElementById('flashcard-content');
+            container.innerHTML = `
+                <img src="${content.image}" alt="${content.name}">
+                <p>${content.name}</p>
+                <button class="button" onclick="playAudio('${content.name}')">Audio</button>
+            `;
+        }
+
+        function prevImage() {
+            currentIndex = (currentIndex > 0) ? currentIndex - 1 : flashcards[currentCategory].length - 1;
+            updateFlashcard();
+        }
+
+        function nextImage() {
+            currentIndex = (currentIndex < flashcards[currentCategory].length - 1) ? currentIndex + 1 : 0;
+            updateFlashcard();
+        }
+
+        function playAudio(name) {
+            const utterance = new SpeechSynthesisUtterance(name);
+            window.speechSynthesis.speak(utterance);
+        }
+
+        let greenStars = 0;
+
+        function startGame() {
+            greenStars = 0;
+            const gameContent = document.getElementById('game-content');
+            gameContent.innerHTML = '';
+            for (let i = 0; i < 10; i++) {
+                const upper = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                const lower = String.fromCharCode(97 + Math.floor(Math.random() * 26));
+                gameContent.innerHTML += `
+                    <div>
+                        <span>${lower}</span> <span>${upper}</span>
+                        <button onclick="checkMatch('${lower}', '${upper}')">Match</button>
+                        <span class="star" id="star-${i}"></span>
+                    </div>
+                `;
+            }
+        }
+
+        function checkMatch(lower, upper) {
+            const isMatch = lower.toUpperCase() === upper;
+            const starId = document.getElementById(`star-${greenStars}`);
+            starId.innerText = isMatch ? '⭐' : '❌';
+            if (isMatch) greenStars++;
+            if (greenStars > 5) {
+                alert('Congratulations! You matched more than 5 letters!');
+            }
+        }
+
         showTab('flashcards');
-    };
-
-    displayCategories(); // Populate categories on load
-</script>
-
+    </script>
 </body>
 </html>
