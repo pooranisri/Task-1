@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,16 +14,20 @@
             margin: 0;
             padding: 20px;
         }
+
         h1 {
             color: #ff6347;
             font-size: 2.5em;
         }
+
         .tab {
             display: none;
         }
+
         .active {
             display: block;
         }
+
         .button {
             background-color: #ff6347;
             color: white;
@@ -33,9 +38,11 @@
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+
         .button:hover {
             background-color: #ff4500;
         }
+
         .category {
             display: inline-block;
             margin: 20px;
@@ -45,52 +52,80 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
+
         .category:hover {
             transform: scale(1.05);
         }
+
         .image-container {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .image-container img {
             width: 150px;
             height: 150px;
             margin: 10px;
         }
+
         .game {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
         }
+
         .letters-container {
             display: flex;
             justify-content: space-around;
             width: 100%;
         }
+
         .letter {
-            font-size: 24px;
+            font-size: 15px;
             margin: 10px;
             cursor: pointer;
-            padding: 10px;
+            padding: 6px;
             border: 2px solid #ccc;
             border-radius: 5px;
             transition: background-color 0.3s;
         }
+
         .letter:hover {
             background-color: #e0e0e0;
         }
+
         .button:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
+
+        .star-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px;
+        }
+
+        .star {
+            font-size: 30px;
+            margin: 0 5px;
+        }
+
+        .green-star {
+            color: green;
+        }
+
+        .red-star {
+            color: red;
+        }
     </style>
 </head>
+
 <body>
 
     <h1>Kids Learning and Fun App</h1>
-    
+
     <button class="button" onclick="showTab('flashcards')">Flashcards</button>
     <button class="button" onclick="showTab('games')">Games</button>
 
@@ -114,9 +149,9 @@
                 <div id="lowercase-container"></div>
                 <div id="uppercase-container"></div>
             </div>
+            <div class="star-container" id="star-container"></div>
         </div>
         <button class="button" onclick="startGame()">Start Game</button>
-        <div class="star" id="result"></div>
         <button class="button" onclick="showTab('flashcards')">Back to Flashcards</button>
     </div>
 
@@ -217,16 +252,19 @@
         }
 
         let greenStars = 0;
+        let redStars = 0;
         let firstSelection = null;
 
         function startGame() {
             greenStars = 0;
+            redStars = 0;
             firstSelection = null;
             document.getElementById('lowercase-container').innerHTML = '';
             document.getElementById('uppercase-container').innerHTML = '';
+            document.getElementById('star-container').innerHTML = '';
 
             const letters = [];
-            for (let i = 0; i < 13; i++) {
+            for (let i = 0; i < 10; i++) {
                 const lower = String.fromCharCode(97 + i);
                 const upper = String.fromCharCode(65 + i);
                 letters.push(lower, upper);
@@ -249,30 +287,74 @@
         }
 
         function selectLetter(letterElement) {
+            if (letterElement.style.pointerEvents === 'none') return; // Prevent multiple clicks on the same letter
+
             if (firstSelection) {
-                // Check for match
-                if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
-                    letterElement.style.backgroundColor = '#00FF00'; 
-                    firstSelection.style.backgroundColor = '#00FF00';
-                    greenStars++;
-                    displayStar();
-                } else {
-                    letterElement.style.backgroundColor = '#FF0000';
-                    firstSelection.style.backgroundColor = '#FF0000';
+                if (firstSelection !== letterElement) {
+                    // Disable both letters after selection
+                    letterElement.style.pointerEvents = 'none';
+                    firstSelection.style.pointerEvents = 'none';
+
+                    // Check for match
+                    if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
+                        letterElement.style.backgroundColor = '#00FF00'; // Green for correct match
+                        firstSelection.style.backgroundColor = '#00FF00';
+
+                        greenStars++;
+                        addStar('green');
+                    } else {
+                        letterElement.style.backgroundColor = '#FF0000'; // Red for incorrect match
+                        firstSelection.style.backgroundColor = '#FF0000';
+
+                        redStars++;
+                        addStar('red');
+                    }
+
+                    firstSelection = null;
+                    checkEndGame(); // Check if the game has ended after every match
                 }
-                firstSelection = null;
             } else {
                 firstSelection = letterElement;
             }
         }
+        function addStar(color) {
+            const star = document.createElement('span');
+            star.className = `star ${color === 'green' ? 'green-star' : 'red-star'}`;
+            star.textContent = '★';
+            document.getElementById('star-container').appendChild(star);
+        }
 
-        function displayStar() {
-            if (greenStars === 5) {
-                alert('Congratulations! You matched 5 letters!');
+        function resetGame() {
+            document.getElementById('lowercase-container').innerHTML = '';
+            document.getElementById('uppercase-container').innerHTML = '';
+            document.getElementById('star-container').innerHTML = '';
+            greenStars = 0;
+            redStars = 0;
+            firstSelection = null;
+        }
+        function checkEndGame() {
+            if (greenStars + redStars === 10) { // Check if all letters have been selected
+                if (greenStars > 5) {
+                    setTimeout(() => alert('Congratulations! You scored more than 5 green stars!'), 500);
+                    resetGame();
+                } else {
+                    setTimeout(() => showTab('flashcards'), 500);
+                }
+            }
+        }
+        
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+
+            if (tab === 'flashcards') {
+                showCategory(currentCategory || 'fruits');
+                resetGame();  // Reset the game when going back to Flashcards
             }
         }
 
-        showTab('flashcards');
+        //showTab('flashcards');
     </script>
 </body>
+
 </html>
