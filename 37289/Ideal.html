@@ -270,7 +270,7 @@
                 letters.push(lower, upper);
             }
 
-            // Shuffle the letters
+
             letters.sort(() => Math.random() - 0.5);
 
             letters.forEach(letter => {
@@ -287,23 +287,23 @@
         }
 
         function selectLetter(letterElement) {
-            if (letterElement.style.pointerEvents === 'none') return; // Prevent multiple clicks on the same letter
+            if (letterElement.style.pointerEvents === 'none') return;
 
             if (firstSelection) {
                 if (firstSelection !== letterElement) {
-                    // Disable both letters after selection
+
                     letterElement.style.pointerEvents = 'none';
                     firstSelection.style.pointerEvents = 'none';
 
                     // Check for match
                     if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
-                        letterElement.style.backgroundColor = '#00FF00'; // Green for correct match
+                        letterElement.style.backgroundColor = '#00FF00';
                         firstSelection.style.backgroundColor = '#00FF00';
 
                         greenStars++;
                         addStar('green');
                     } else {
-                        letterElement.style.backgroundColor = '#FF0000'; // Red for incorrect match
+                        letterElement.style.backgroundColor = '#FF0000';
                         firstSelection.style.backgroundColor = '#FF0000';
 
                         redStars++;
@@ -311,7 +311,7 @@
                     }
 
                     firstSelection = null;
-                    checkEndGame(); // Check if the game has ended after every match
+                    checkEndGame();
                 }
             } else {
                 firstSelection = letterElement;
@@ -333,7 +333,7 @@
             firstSelection = null;
         }
         function checkEndGame() {
-            if (greenStars + redStars === 10) { // Check if all letters have been selected
+            if (greenStars + redStars === 10) {
                 if (greenStars > 5) {
                     setTimeout(() => alert('Congratulations! You scored more than 5 green stars!'), 500);
                     resetGame();
@@ -342,18 +342,18 @@
                 }
             }
         }
-        
+
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
 
             if (tab === 'flashcards') {
                 showCategory(currentCategory || 'fruits');
-                resetGame();  // Reset the game when going back to Flashcards
+                resetGame();
             }
         }
 
-        //showTab('flashcards');
+
     </script>
 </body>
 
