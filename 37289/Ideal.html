@@ -119,6 +119,14 @@
         .red-star {
             color: red;
         }
+        #prev-button,
+        #next-button {
+            display: none;
+        }
+        .selected {
+        background-color: yellow;
+    }
+
     </style>
 </head>
 
@@ -152,7 +160,7 @@
             <div class="star-container" id="star-container"></div>
         </div>
         <button class="button" onclick="startGame()">Start Game</button>
-        <button class="button" onclick="showTab('flashcards')">Back to Flashcards</button>
+        <button class="button" onclick="showTab(flashcards && games)">Back to Flashcards</button>
     </div>
 
     <script>
@@ -213,8 +221,14 @@
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
+            document.querySelectorAll('.category').forEach(cat => {
+        cat.classList.remove('selected');
+    });
             if (tab === 'flashcards') {
-                showCategory(currentCategory || 'fruits');
+                document.getElementById('flashcard-content').innerHTML = '';
+                document.getElementById('prev-button').style.display = 'none';
+                document.getElementById('next-button').style.display = 'none';
+
             }
         }
 
@@ -222,6 +236,17 @@
             currentCategory = category;
             currentIndex = 0;
             updateFlashcard();
+            document.getElementById('prev-button').style.display = 'inline-block';
+            document.getElementById('next-button').style.display = 'inline-block';
+            document.querySelectorAll('.category').forEach(cat => {
+            cat.classList.remove('selected');
+        });
+        document.querySelectorAll('.category').forEach(cat => {
+            if (cat.textContent.trim() === category.charAt(0).toUpperCase() + category.slice(1)) {
+                cat.classList.add('selected');
+            }
+        });
+
         }
 
         function updateFlashcard() {
@@ -270,7 +295,7 @@
                 letters.push(lower, upper);
             }
 
-
+            // Shuffle the letters
             letters.sort(() => Math.random() - 0.5);
 
             letters.forEach(letter => {
@@ -291,7 +316,7 @@
 
             if (firstSelection) {
                 if (firstSelection !== letterElement) {
-
+                    // Disable both letters after selection
                     letterElement.style.pointerEvents = 'none';
                     firstSelection.style.pointerEvents = 'none';
 
@@ -342,18 +367,22 @@
                 }
             }
         }
-
+        
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(tab).classList.add('active');
-
+            document.querySelectorAll('.category').forEach(cat => {
+        cat.classList.remove('selected');
+    });
             if (tab === 'flashcards') {
-                showCategory(currentCategory || 'fruits');
+                document.getElementById('flashcard-content').innerHTML = '';
+                document.getElementById('prev-button').style.display = 'none';
+                document.getElementById('next-button').style.display = 'none';
                 resetGame();
             }
         }
 
-
+        showTab(flashcards && games);
     </script>
 </body>
 
