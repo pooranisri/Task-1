@@ -119,14 +119,15 @@
         .red-star {
             color: red;
         }
+
         #prev-button,
         #next-button {
             display: none;
         }
-        .selected {
-        background-color: yellow;
-    }
 
+        .selected {
+            background-color: yellow;
+        }
     </style>
 </head>
 
@@ -220,10 +221,14 @@
 
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
+
+            const selectedTab = document.getElementById(tab);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
             document.querySelectorAll('.category').forEach(cat => {
-        cat.classList.remove('selected');
-    });
+                cat.classList.remove('selected');
+            });
             if (tab === 'flashcards') {
                 document.getElementById('flashcard-content').innerHTML = '';
                 document.getElementById('prev-button').style.display = 'none';
@@ -239,13 +244,13 @@
             document.getElementById('prev-button').style.display = 'inline-block';
             document.getElementById('next-button').style.display = 'inline-block';
             document.querySelectorAll('.category').forEach(cat => {
-            cat.classList.remove('selected');
-        });
-        document.querySelectorAll('.category').forEach(cat => {
-            if (cat.textContent.trim() === category.charAt(0).toUpperCase() + category.slice(1)) {
-                cat.classList.add('selected');
-            }
-        });
+                cat.classList.remove('selected');
+            });
+            document.querySelectorAll('.category').forEach(cat => {
+                if (cat.textContent.trim() === category.charAt(0).toUpperCase() + category.slice(1)) {
+                    cat.classList.add('selected');
+                }
+            });
 
         }
 
@@ -280,14 +285,9 @@
         let redStars = 0;
         let firstSelection = null;
 
-        function startGame() {
-            greenStars = 0;
-            redStars = 0;
-            firstSelection = null;
-            document.getElementById('lowercase-container').innerHTML = '';
-            document.getElementById('uppercase-container').innerHTML = '';
-            document.getElementById('star-container').innerHTML = '';
 
+        function startGame() {
+            resetGame();
             const letters = [];
             for (let i = 0; i < 10; i++) {
                 const lower = String.fromCharCode(97 + i);
@@ -312,41 +312,64 @@
         }
 
         function selectLetter(letterElement) {
-            if (letterElement.style.pointerEvents === 'none') return;
 
-            if (firstSelection) {
-                if (firstSelection !== letterElement) {
-                    // Disable both letters after selection
-                    letterElement.style.pointerEvents = 'none';
-                    firstSelection.style.pointerEvents = 'none';
+            if (firstSelection === letterElement) {
+                letterElement.classList.remove('selected');
+                firstSelection = null;
+                return;
+            }
 
-                    // Check for match
-                    if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
-                        letterElement.style.backgroundColor = '#00FF00';
-                        firstSelection.style.backgroundColor = '#00FF00';
+            if (letterElement.parentElement.id === 'lowercase-container') {
 
-                        greenStars++;
-                        addStar('green');
-                    } else {
-                        letterElement.style.backgroundColor = '#FF0000';
-                        firstSelection.style.backgroundColor = '#FF0000';
-
-                        redStars++;
-                        addStar('red');
-                    }
-
-                    firstSelection = null;
-                    checkEndGame();
+                if (firstSelection) {
+                    firstSelection.classList.remove('selected');
                 }
-            } else {
+                letterElement.classList.add('selected');
                 firstSelection = letterElement;
+            } else if (letterElement.parentElement.id === 'uppercase-container') {
+                if (!firstSelection) return;
+
+                // Check for match
+                if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
+                    letterElement.style.backgroundColor = '#00FF00'; // Green
+                    firstSelection.style.backgroundColor = '#00FF00'; // Green
+                    greenStars++;
+                    addStar('green');
+                } else {
+                    letterElement.style.backgroundColor = '#FF0000'; // Red
+                    firstSelection.style.backgroundColor = '#FF0000'; // Red
+                    redStars++;
+                    addStar('red');
+                }
+
+
+                firstSelection.classList.remove('selected');
+                firstSelection = null;
+                checkEndGame();
             }
         }
+
         function addStar(color) {
             const star = document.createElement('span');
             star.className = `star ${color === 'green' ? 'green-star' : 'red-star'}`;
             star.textContent = '★';
             document.getElementById('star-container').appendChild(star);
+        }
+
+        function checkEndGame() {
+            if (greenStars + redStars === 10) {
+                if (greenStars > 5) {
+                    setTimeout(() => {
+                        alert('Congratulations! You scored more than 5 green stars!');
+                        resetGame();
+                    }, 500);
+                } else {
+                    setTimeout(() => {
+                        alert('You lost! Try again.');
+                        resetGame();
+                    }, 500);
+                }
+            }
         }
 
         function resetGame() {
@@ -357,24 +380,18 @@
             redStars = 0;
             firstSelection = null;
         }
-        function checkEndGame() {
-            if (greenStars + redStars === 10) {
-                if (greenStars > 5) {
-                    setTimeout(() => alert('Congratulations! You scored more than 5 green stars!'), 500);
-                    resetGame();
-                } else {
-                    setTimeout(() => showTab('flashcards'), 500);
-                }
-            }
-        }
-        
+
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tab).classList.add('active');
+
+            const selectedTab = document.getElementById(tab);
+            if (selectedTab) {
+                selectedTab.classList.add('active');
+            }
             document.querySelectorAll('.category').forEach(cat => {
-        cat.classList.remove('selected');
-    });
-            if (tab === 'flashcards') {
+                cat.classList.remove('selected');
+            });
+            if (tab === 'flashcards' || tab === 'games') {
                 document.getElementById('flashcard-content').innerHTML = '';
                 document.getElementById('prev-button').style.display = 'none';
                 document.getElementById('next-button').style.display = 'none';
