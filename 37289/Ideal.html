@@ -333,11 +333,15 @@
                 if (firstSelection.textContent.toUpperCase() === letterElement.textContent.toUpperCase()) {
                     letterElement.style.backgroundColor = '#00FF00'; // Green
                     firstSelection.style.backgroundColor = '#00FF00'; // Green
+                    letterElement.style.pointerEvents = 'none';
+                    firstSelection.style.pointerEvents = 'none';
                     greenStars++;
                     addStar('green');
                 } else {
                     letterElement.style.backgroundColor = '#FF0000'; // Red
                     firstSelection.style.backgroundColor = '#FF0000'; // Red
+                    letterElement.style.pointerEvents = 'none';
+                    firstSelection.style.pointerEvents = 'none';
                     redStars++;
                     addStar('red');
                 }
